@@ -1,0 +1,68 @@
+Programming Team VIM Presentation
+
+two subsets of audience:
+- never opened to intermediate
+- intermediate to very advanced
+
+show learning curve picture
+
+Beginners (30 mins):
+- Opening VIM
+- Basic commands (:w :q :e)
+- How to look at the keyboard:
+  - "Using vim is like trying to use a keyboard
+    in your room, but your room is locked, so you
+	have to do it with a coat hanger through the
+	lock of the door."
+  - Each key is bound to some function or mode
+  - Don't try pressing random keys!
+- Moving around (hjkl b e w)
+- Insert mode
+- highlighting (v and V) <-- Dr. Back
+- modifying without insert mode (d dd)
+- Explorer (good for beginners)
+- Panes
+- Good Resources (Listed at bottom)
+
+Advanced (30min):
+- Combining (Command + location)
+    cw dw de
+    ciw viw ci{ ci[ diw di{
+- Repeating Commands (with .)
+- Hashtag Powerful
+  - Lookup (just #)
+  - e# to switch
+- Search with / and jump with n N
+- Now things get juicy
+  - Look at example code, rename all variables apple to orange (IDE's have features for this)
+- Intro to VIMRC and "map"
+    - Adding semicolons to end of lines (stop using right arrow key, please it hurts my heart)
+        map ;; $a;<Esc>
+- Copy/Pasting (registers)
+- Capital J
+- SHIFT-O bug (why you should use neovim if possible)
+- CONTROL-O (not a bug)
+- Jumping between blocks ("{" and "}")
+  - Good reason to use empty lines in your code
+  - Using VIM can change your coding style
+- Indentation << >>
+- Commenting code blocks
+  - Visual Block Mode and SHIFT-I trick
+    CTRL-V
+
+Extras (if time permit): 
+- Plugins (do I need them?) My Favorite:
+  - NERDTree
+  - Auto-Pairs
+- No scrolling????? BUT WHY?? Use this:
+    map <C-j> <C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j
+    map <C-k> <C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k
+- Recording Macros
+    noremap Q @q
+- Fixing lost swap file
+
+
+Conclusion:
+- You won't become very good overnight
+- It takes time to be a VIM ninja
+- But once you are a ninja, you're a ninja and you won't be able to hang out with regular people
