@@ -35,11 +35,13 @@ int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
 string st;
-int K, ops[1005], ans;
+const int sz = 1000, max_ops = 1000;
+LL choose[sz][sz];
+int K, ops[max_ops], ans;
 
 int init()
 {
-  FOR(i, 1, 10){
+  FOR(i, 1, max_ops){
     int a = i;
     int op = 0;
     while(a>1){
@@ -58,23 +60,19 @@ int init()
     }
     ops[i] = op;
   }
-}
 
-LL comb(LL n, LL k)
-{
-  LL a = 1, nn = n, nk = n-k;
-  for (;nn > k;nn--)a*=nn;
-  for (;nk > 1;nk--)a/=nk;
-  return a;
+  choose[0][0] = 1;
+  FOR(i, 1, sz) F0R(j, i+1) choose[i][j] = (j==0?0:choose[i-1][j-1]) + choose[i-1][j];
 }
 
 int main()
 {
   //cin >> st >> K;
-  int n, k; cin >> n >> k;
-  cout << comb(n, k);
-  return 0;
   init();
+  F0R(i, 30) cout << ops[i] << ' ';
+  cout << endl;
+  F0R(i, 30) F0R(j, 30) cout << 
+  return 0;
 
   int a = 0;
   F0R(i, st.length()){
