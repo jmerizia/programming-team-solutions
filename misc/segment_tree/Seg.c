@@ -1,4 +1,4 @@
-#include <iostream>
+include <iostream>
 #include <string>
 #include <math.h>
 #include <algorithm>
@@ -34,57 +34,30 @@ const int ERR = 1e-5;
 int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
-string st;
-const int sz = 1000, max_ops = 1000;
-LL choose[sz][sz];
-int K, ops[max_ops], ans;
+const int N = 1e5; // array limit
+int n;
+int t[2*N];
 
-int init()
+int build()
 {
-  FOR(i, 1, max_ops){
-    int a = i;
-    int op = 0;
-    while(a>1){
-      op++;
-
-      // add digits
-      int x = a;
-      int nw = 0;
-      while(x>0){
-        int l = x%2;
-        nw+=l;
-        x/=2;
-      }
-
-      a=nw;
-    }
-    ops[i] = op;
-  }
-
-  choose[0][0] = 1;
-  FOR(i, 1, sz) F0R(j, i+1) choose[i][j] = (j==0?0:choose[i-1][j-1]) + choose[i-1][j];
+  // build
+  for(int i = n-1, i>0; --i) t[i] = t[i*2] + t[i*2+1];
 }
 
-int numbers_less_than(int a)
+int modify(int l, int r)
+{
+  for (t[p += n] = value; p > 1; p >>= 1) t[p/2]= t[p] + t[p^1];
+}
+
+int query()
 {
   
 }
 
+
 int main()
 {
-  cin >> st >> K;
-  init();
-
-  int a = 0;
-  F0R(i, st.length()){
-    if(st[i]=='1'){
-      // choose 0
-      int n = st.length()-i-1;
-
-      // choose 1
-      a++;
-    }
-  }
+  cin >> n;
 
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
