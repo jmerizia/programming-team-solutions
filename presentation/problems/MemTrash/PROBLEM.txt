@@ -1,0 +1,11 @@
+Limak bear is hungry.
+Food is far away from Limak so Limak need help solving problem.
+
+Given an undirected unweighted graph, determine all nodes that are connected to a given node.
+
+Limak was very hungry, so he came up with bad, RE solution. Help Limak find his food.
+
+INPUT
+Integers N, M (1 < N,M < 100000) are given on the first line.
+The next M lines contain integer vertex pairs (u, v) that describe a single edge of the graph.
+The graph is valid, and there are no disjoint segments.

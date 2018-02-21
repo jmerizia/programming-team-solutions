@@ -66,3 +66,4 @@ Conclusion:
 - You won't become very good overnight
 - It takes time to be a VIM ninja
 - But once you are a ninja, you're a ninja and you won't be able to hang out with regular people
+

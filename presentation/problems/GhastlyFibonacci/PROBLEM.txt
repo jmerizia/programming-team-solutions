@@ -1,0 +1,33 @@
+Aarav was caught cheating on the weekly PCS contests from home.
+As punishment, he is required to solve the classic "return the nth Fibonacci number" problem.
+The catch is that he can't use pypy or Python, and must type everything using only his nose.
+
+Aarav finally finishes typing up a long and clumsy Java solution.
+He is so tired and behind in the contest that he submits his solution without testing it.
+Unfortunately, his solution times out.
+His code is provided below.
+Help him figure out what went wrong, so Aarav can go back to using his hands to code again.
+
+#Input
+The first line contains a positive integer Q (1 < 1000), the number of queries.
+The next Q lines each contain a single positive integer q_i (1 < q_1 < 40).
+
+#Output
+Output Q lines. On the ith line, print the q_ith Fibonacci number.
+
+INPUT
+6
+1
+5
+9
+10
+30
+40
+
+OUTPUT
+1
+5
+34
+55
+832040
+102334155

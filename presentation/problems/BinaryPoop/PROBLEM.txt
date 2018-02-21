@@ -1,0 +1,32 @@
+Jake is in his interview with a blockchain startup that's coming out with a new game called KryptoAlligators.
+His interview question is to determine if a series of given values are in a sorted array.
+To make things more challenging, Jake isn't allowed to use hashing.
+Usually, Jake solves problems by implementing the brute force first,
+then adding HashMaps wherever he feels like it,
+so he is quite stuck.
+
+Jake wants to help make the world a better place with his passion for blockchain,
+so help him on his interview by improving his code!
+
+#Input
+On the first line are the positive integers N and Q (1 <= N, Q <= 100,000) in ascending order,
+where N is the number of elements in the array and Q is the number of search queries.
+On the second line, there are N spaced positive integers q_i (1 < q_1 < 100,000).
+On the next Q lines are single positive integers, the search queries.
+
+#Output
+Output Q lines, one for each query. On the ith line, if q_i is in the array, print "yes", 
+otherwise, print "no".
+
+INPUT
+10 4
+1 2 3 4 6 7 8 9 10 11
+4
+6
+5
+12
+OUTPUT
+yes
+yes
+no
+no
