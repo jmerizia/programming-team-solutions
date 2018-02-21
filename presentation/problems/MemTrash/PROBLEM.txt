@@ -5,7 +5,20 @@ Given an undirected unweighted graph, determine all nodes that are connected to 
 
 Limak was very hungry, so he came up with bad, RE solution. Help Limak find his food.
 
-INPUT
-Integers N, M (1 < N,M < 100000) are given on the first line.
+#Input
+Integers N, M, Q (1 < N,M < 100000) are given on the first line.
+N is the number of nodes in the graph, M is the number of edges, and Q is the query node.
 The next M lines contain integer vertex pairs (u, v) that describe a single edge of the graph.
 The graph is valid, and there are no disjoint segments.
+
+#Output
+Output every node that is connected to the query node, Q, each on a separate line.
+
+SAMPLE INPUT
+4 3 1
+1 3
+1 4
+1 2
+
+SAMPLE OUTPUT
+

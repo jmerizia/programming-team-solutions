@@ -2,23 +2,24 @@ An Azure DevOps engineer at Microsoft is making a mobile application in his favo
 For part of his app, he needs to keep track of users' messages to each other, so he uses a stack data structure.
 After whipping up some juicy C code, he quickly realizes that he needs to be using Java.
 "Bah!" he shouts at his computer screen.
-Using a sketchy website tool, he found in an archaic 4chan post, he manages to transpile his code to Java.
+Using a sketchy website tool he found in an archaic 4chan post, he manages to transpile his code to Java.
 
 Unfortunately, his mobile app is starting to become very slow after only about 10 daily active users.
 He tells you, his summer intern, to modify his transpiled code to make it faster.
 
 Help this poor Microsoft engineer optimize his app so that he can sell his mobile app startup and quit Microsoft!
 
-Input
-The first lines contains an integer N (1 < N < 1,500,000).
+#Input
+The first line contains an integer N (1 < N < 1,500,000).
 The next N lines contain the queries that are performed on the stack.
 A single query contains a character, which resembles the type (a=add, r=remove).
 For every add operation, an integer will follow, the user's ID.
 
-Output
+#Output
 Output N lines, one line for each element in the resulting stack.
 Numbers should be output in the order which they were put in,
 starting from top to bottom.
+That is, the top element of the stack should be output first.
 
 INPUT
 7

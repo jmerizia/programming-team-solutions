@@ -1,30 +1,14 @@
-Programming Team VIM Presentation
+"Using vim is like trying to use a keyboard
+in your room, but your room is locked, so you
+have to do it with a coat hanger through the
+lock of the door."
 
-two subsets of audience:
-- never opened to intermediate
-- intermediate to very advanced
 
-show learning curve picture
-
-Beginners (30 mins):
-- Opening VIM
-- Basic commands (:w :q :e)
-- How to look at the keyboard:
-  - "Using vim is like trying to use a keyboard
-    in your room, but your room is locked, so you
-	have to do it with a coat hanger through the
-	lock of the door."
-  - Each key is bound to some function or mode
-  - Don't try pressing random keys!
-- Moving around (hjkl b e w)
-- Insert mode
-- highlighting (v and V) <-- Dr. Back
-- modifying without insert mode (d dd)
+ADVANCED TOPICS
 - Explorer (good for beginners)
+- :sh  then  CTRL-D
 - Panes
-- Good Resources (Listed at bottom)
-
-Advanced (30min):
+- highlighting (v and V) <-- Dr. Back
 - Combining (Command + location)
     cw dw de
     ciw viw ci{ ci[ diw di{

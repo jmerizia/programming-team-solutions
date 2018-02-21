@@ -14,4 +14,3 @@
   - :set paste ; :set nopaste
   - Useful bindings in ~/.vimrc
   - Commenting lines, indenting lines
-

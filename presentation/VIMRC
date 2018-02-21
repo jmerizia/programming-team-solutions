@@ -1,0 +1,28 @@
+"|#####################|
+"|##  BINDINGS  #######|
+"|#####################|
+command! RC e ~/.vimrc
+command! W w
+command! Q q
+" smooth scrolling:
+map <C-j> <C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j:sleep 1m<CR><C-e>j
+map <C-k> <C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k:sleep 1m<CR><C-y>k
+" end lines with semi colon quickly
+map ;; $a;<Esc>
+noremap Q @q
+tnoremap <ESC> <C-\><C-N>
+noremap <C-w>; <C-w>v<C-w>l:term<CR>
+
+"|#####################|
+"|##  BASIC  ##########|
+"|#####################|
+set number
+set relativenumber
+syntax on
+set background=dark
+set clipboard+=unnamedplus
+filetype plugin indent on
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set expandtab

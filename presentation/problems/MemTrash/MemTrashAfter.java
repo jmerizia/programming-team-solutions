@@ -1,11 +1,13 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MemTrashAfter {
   public static void main(String[] args) {
     Scanner s = new Scanner(System.in);
     int n = s.nextInt();
     int m = s.nextInt();
+    int q = s.nextInt();
     ArrayList<Integer>[] adj = new ArrayList[n+1];
     for (int i = 0; i < adj.length; i++) adj[i] = new ArrayList<>();
     for (int i = 0; i < m; i++) {
@@ -15,10 +17,10 @@ public class MemTrashAfter {
       adj[v].add(u);
     }
     StringBuilder sb = new StringBuilder();
-    int q = s.nextInt();
+    Collections.sort(adj[q]);
     for (int v: adj[q]) {
       sb.append(v);
-      sb.append(' ');
+      sb.append('\n');
     }
     System.out.println(sb);
   }
