@@ -28,50 +28,49 @@ typedef vector<int> VI;
 #define F first
 #define S second
 #define PB push_back
-#define MP MP
+#define MP make_pair
 const int MOD = (int) pow(10, 9) + 7;
 const int ERR = 1e-5;
 int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
-const int N = 1e5; // array limit
-int n;
-int t[2*N];
+const int N = 1e5;
+int t[N*4];
 
-int build()
+void build(int pos, int left, int right)
 {
-  for(int i = n-1; i>0; --i) t[i] = t[i<<1] + t[i<<1|1];
-}
-
-int modify(int p, int value)
-{
-  for (t[p += n] = value; p > 1; p >>= 1) t[p>>2]= t[p] + t[p^1];
-}
-
-int query(int l, int r)
-{
-  int res = 0;
-  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-    if (l&1) res += t[l++];
-    if (r&1) res += t[--r];
+  if (left==right) {
+    cin >> t[pos];
+    return;
   }
-  return res;
+  int mid = (left+right)/2;
+  build(pos*2, left, mid);
+  build(pos*2+1, mid+1, right);
+  t[pos] = t[pos*2+1] + t[pos*2];
 }
 
+void modify(int pos, int left, int right, int x, int value)
+{
+  if (left==right) {
+    t[pos]=y;
+    return;
+  }
+  int mid=(left+right)/2;
+  if (target<=mid) modify(pos*2, left, mid, x, value);
+  else modify(pos*2+1, mid+1, right, x, value);
+  t[pos] = t[pos*2+1] + t[pos*2];
+}
+
+int query(int pos, int left, int right)
+{
+  if (left<pos*2) {
+    return t[pos];
+  }
+}
 
 int main()
 {
-  cin >> n;
-  for (int i = 0; i < n; i++) cin >> t[i+n];
-  build();
 
-
-  for (int i = 1; i < 2*n; i++){
-    cout << t[i] << ' ';
-  }
-  return 0;
-  modify(0, 10);
-  cout << query(0, 3);
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
 }

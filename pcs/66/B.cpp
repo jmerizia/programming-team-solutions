@@ -28,50 +28,53 @@ typedef vector<int> VI;
 #define F first
 #define S second
 #define PB push_back
-#define MP MP
+#define MP make_pair
 const int MOD = (int) pow(10, 9) + 7;
 const int ERR = 1e-5;
 int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
-const int N = 1e5; // array limit
 int n;
-int t[2*N];
+VI v;
+vector<VI> vv;
+vector<string> vs;
 
-int build()
+void solve(VI cur)
 {
-  for(int i = n-1; i>0; --i) t[i] = t[i<<1] + t[i<<1|1];
-}
-
-int modify(int p, int value)
-{
-  for (t[p += n] = value; p > 1; p >>= 1) t[p>>2]= t[p] + t[p^1];
-}
-
-int query(int l, int r)
-{
-  int res = 0;
-  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-    if (l&1) res += t[l++];
-    if (r&1) res += t[--r];
+  if (SZ(cur) == n){
+    vv.PB(cur);
+    return;
   }
-  return res;
+  for (int k: v){
+    if (find(ALL(cur), k) != cur.end()) continue;
+    cur.PB(k);
+    solve(cur);
+    cur.pop_back();
+  }
 }
-
 
 int main()
 {
   cin >> n;
-  for (int i = 0; i < n; i++) cin >> t[i+n];
-  build();
-
-
-  for (int i = 1; i < 2*n; i++){
-    cout << t[i] << ' ';
+  F0R(i, n){
+    int a; cin >> a;
+    v.PB(a);
   }
-  return 0;
-  modify(0, 10);
-  cout << query(0, 3);
+  VI cur;
+  solve(cur);
+
+  F0R(i, SZ(vv)) {
+    SS ss;
+    F0R(j, SZ(vv[0])){
+      ss << vv[i][j];
+      ss << " ";
+    }
+    vs.PB(ss.str());
+  }
+  sort(ALL(vs));
+
+  F0R(i, SZ(vs)) cout << vs[i] << endl;
+
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
 }

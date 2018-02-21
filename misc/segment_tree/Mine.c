@@ -38,40 +38,34 @@ const int N = 1e5; // array limit
 int n;
 int t[2*N];
 
-int build()
+void init()
 {
-  for(int i = n-1; i>0; --i) t[i] = t[i<<1] + t[i<<1|1];
+  for (int i = 0; i < n; i++) cin >> t[i+n];
 }
 
-int modify(int p, int value)
+void build()
 {
-  for (t[p += n] = value; p > 1; p >>= 1) t[p>>2]= t[p] + t[p^1];
+  for (int i = n-1; i > 0; i--)
+    t[i] = t[2*i] + t[2*i+1];
 }
 
-int query(int l, int r)
+void modify(int pos, int value)
 {
-  int res = 0;
-  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-    if (l&1) res += t[l++];
-    if (r&1) res += t[--r];
-  }
-  return res;
+  t[n+pos] = value;
+  for (int i = (n+pos)/2; i > 0; i/=2)
+    t[i] = t[i<<1] + t[i<<1|1];
 }
-
 
 int main()
 {
   cin >> n;
-  for (int i = 0; i < n; i++) cin >> t[i+n];
-  build();
-
+  init(); build();
+  //modify(0, 100);
 
   for (int i = 1; i < 2*n; i++){
     cout << t[i] << ' ';
   }
-  return 0;
-  modify(0, 10);
-  cout << query(0, 3);
+
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
 }

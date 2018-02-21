@@ -28,50 +28,21 @@ typedef vector<int> VI;
 #define F first
 #define S second
 #define PB push_back
-#define MP MP
+#define MP make_pair
 const int MOD = (int) pow(10, 9) + 7;
 const int ERR = 1e-5;
 int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
-const int N = 1e5; // array limit
-int n;
-int t[2*N];
-
-int build()
-{
-  for(int i = n-1; i>0; --i) t[i] = t[i<<1] + t[i<<1|1];
-}
-
-int modify(int p, int value)
-{
-  for (t[p += n] = value; p > 1; p >>= 1) t[p>>2]= t[p] + t[p^1];
-}
-
-int query(int l, int r)
-{
-  int res = 0;
-  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-    if (l&1) res += t[l++];
-    if (r&1) res += t[--r];
-  }
-  return res;
-}
-
+double p;
+LL x;
 
 int main()
 {
-  cin >> n;
-  for (int i = 0; i < n; i++) cin >> t[i+n];
-  build();
+  cin >> p >> x;
+  double k = p*((1-pow(1-p, x))/(1-(1-p)));
+  printf("%0.8f", pow(k, 300));
 
-
-  for (int i = 1; i < 2*n; i++){
-    cout << t[i] << ' ';
-  }
-  return 0;
-  modify(0, 10);
-  cout << query(0, 3);
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
 }

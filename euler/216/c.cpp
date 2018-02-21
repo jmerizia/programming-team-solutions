@@ -34,7 +34,7 @@ const int ERR = 1e-5;
 int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
-const int N = 1e8;
+const int N = 8e6;
 
 int siv[N+1];
 VI pri;
@@ -60,26 +60,8 @@ int main()
 {
   init();
   cout << "done creating sieve." << endl;
-  //FOR(i, 1, SZ(pri)) cout << pri[i] << ' ';
   cout << "primes found: " << SZ(pri)-1 << endl;
   cout << "largest prime: " << pri[SZ(pri)-1] << endl;
-  //int n = 5e6;
-  //FOR(i, 1, n){
-  //  LL k = 2*i*i-1;
-  //  cout << k << ' ';
-  //  int p = 1;
-  //  int ct = 0;
-  //  while (k>1){
-  //    if (k%pri[p]==0){
-  //      k/= pri[p];
-  //      if (ct>=1) prime_appearance[pri[p]]++;
-  //      ct++;
-  //      cout << pri[p] << ' ';
-  //    } else p++;
-  //  }
-  //  cout << endl;
-  //  freq[ct]++;
-  //}
   
   int n = 1e4;
   int tot = n-2;

@@ -28,50 +28,47 @@ typedef vector<int> VI;
 #define F first
 #define S second
 #define PB push_back
-#define MP MP
+#define MP make_pair
 const int MOD = (int) pow(10, 9) + 7;
 const int ERR = 1e-5;
 int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
 int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
 
-const int N = 1e5; // array limit
-int n;
-int t[2*N];
+int e, q;
+map<string, vector<string>> adj;
 
-int build()
+int bfs(string start)
 {
-  for(int i = n-1; i>0; --i) t[i] = t[i<<1] + t[i<<1|1];
-}
-
-int modify(int p, int value)
-{
-  for (t[p += n] = value; p > 1; p >>= 1) t[p>>2]= t[p] + t[p^1];
-}
-
-int query(int l, int r)
-{
-  int res = 0;
-  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-    if (l&1) res += t[l++];
-    if (r&1) res += t[--r];
+  set<string> vis;
+  queue<string> Q;
+  Q.push(start);
+  vis.insert(start);
+  while (SZ(Q)) {
+    string nxt = Q.front();
+    Q.pop();
+    for (string k: adj[nxt]) {
+      if (!vis.count(nxt)) Q.push(k);
+    }
   }
-  return res;
 }
-
 
 int main()
 {
-  cin >> n;
-  for (int i = 0; i < n; i++) cin >> t[i+n];
-  build();
-
-
-  for (int i = 1; i < 2*n; i++){
-    cout << t[i] << ' ';
+  cin >> e >> q;
+  F0R(i, e) {
+    string a, b;
+    cin >> a >> b;
+    vector<string> ve;
+    if (!adj.count(a)) adj.insert(MP(a, ve));
+    if (!adj.count(b)) adj.insert(MP(a, ve));
+    adj[a].PB(b);
+    adj[b].PB(a);
   }
-  return 0;
-  modify(0, 10);
-  cout << query(0, 3);
+  F0R(i, q) {
+    string a; cin >> a;
+
+  }
+
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
 }

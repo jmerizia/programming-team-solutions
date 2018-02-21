@@ -28,16 +28,26 @@ typedef vector<int> VI;
 #define F first
 #define S second
 #define PB push_back
+#define MP make_pair
 const int MOD = (int) pow(10, 9) + 7;
 const int ERR = 1e-5;
-int arMinIdx(int*arr,int n){return min_element(arr,arr+n)-arr;}
-int arMaxIdx(int*arr,int n){return max_element(arr,arr+n)-arr;}
-int gcd(int a,int b){if(b==0)return a;else return gcd(b,a%b);}
-int lcm(int a,int b){return abs(a*b)/gcd(a,b);}
+int GCD(int a,int b){if(b==0)return a;else return GCD(b,a%b);}
+int LCM(int a,int b){return abs(a*b)/GCD(a,b);}
+
+int N;
+double p;
+
+int fact(int n)
+{
+  int k = 1;
+  while (n>1) k*=n, n--;
+  return k;
+}
 
 int main()
 {
-
+  cin >> N >> p;
+  cout << fact(N);
 
   //clock_t et=clock();cout<<double(et-bt)/CLOCKS_PER_SEC;
   return 0;
