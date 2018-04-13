@@ -1,39 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define FORD(i, a, b) for (int i = b-1; i >= a; i--)
+#define FOR(i, a, b) for (int i = a; i < b; i++)
+
 const int N = 50;
-const int STATES = 1e5;
-
-int n, row[N], col[N];
-
-int checkState(vector<vector<int>> state)
-{
-  for (int i = 0; i < n; i++)
-    int r = 0;
-    for (int j = 0; j < n; j++) r^state[i][j];
-
-}
-
-void solve(int i, int j, vector<vector<int>> state)
-{
-  if (i == n || j == n) return checkState();
-  state[i] = 0;
-  if ()
-  solve(i+1, j, state);
-  solve(i+1, j, state);
-}
+int n, m, row[N], col[N], ans[N][N];
+string a, b;
 
 int main()
 {
-  cin >> n;
-  string a, b;
   cin >> a >> b;
-  for (int i = 0; i < n; i++) {
-    row[i] = a[j] - '0';
-    row[i] = b[j] - '0';
-  }
-  vector<vector<int>> start_state = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+  n = a.length();
+  m = b.length();
+  FOR(i, 0, n) row[i] = a[i] - '0';
+  FOR(i, 0, m) col[i] = b[i] - '0';
 
-  solve();
+  FOR(i, 0, n) FOR(j, 0, m) {
+    if (row[i] ^ col[j]) ans[i][j] = 1;
+    else ans[i][j] = -1000;
+  }
+
+  FORD(i, 0, n) {
+    FORD(j, 0, m) {
+      if (ans[i][j] != 1) {
+
+        ans[i][j] = 1;
+        int r = 0, c = 0;
+        FOR(ii, 0, n) r+=ans[ii][j];
+        FOR(jj, 0, m) c+=ans[i][jj];
+        if (r >= 0 && c >= 0) {
+          if (col[i] != c%2 || row[j] != r%2) {
+            printf("can't add. i=%d j=%d \n", i, j);
+            ans[i][j] = 0; 
+          }
+        }
+
+      }
+    }
+  }
+
+  FOR(i, 0, n) {
+    FOR(j, 0, m) cout << ans[i][j];
+    cout << endl;
+  }
 
 }

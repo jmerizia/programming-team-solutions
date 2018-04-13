@@ -1,50 +1,52 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int cases;
+const int N = 300;
+int T, D, n, cur;
+string s;
 
-int calc(string s)
+void upd()
 {
-  int damage = 0;
-  int charge = 1;
-  for (int i = 0; i < s.length(); i++) {
-    if (s[i] == 'S') damage += charge;
-    else if (s[i] == 'C') charge *= 2;
+  int tmp = 1;
+  cur = 0;
+  for (int i = 0; i < n; i++) {
+    if (s[i] == 'S') cur += tmp;
+    else tmp <<= 1;
   }
-  return damage;
 }
 
 int main()
 {
 
-  cin >> cases;
-  for (int i = 0; i < cases; i++) {
-    int damage, n;
-    string query;
+  cin >> T;
+  for (int i = 0; i < T; i++) {
 
-    cin >> damage;
-    cin >> query;
-    n = query.length();
+    cin >> D >> s;
+    n = s.length();
 
-    int cur = calc(query);
     int count = 0;
     bool impossible = false;
-    while (cur > damage) {
-      printf("query: %s %d \n", query.c_str(), cur);
 
-      int idxC = n-1;
-      for (; idxC >= 0 && query[idxC] == 'S'; idxC--);
-      if (idxC < n-1) {
-        query[idxC] = 'S';
-        query[idxS] = 'C';
+    printf("Case #%d: ", i+1);
+    upd();
+
+    while (cur > D) {
+      int idx = n-1;
+      while (idx >= 0 && s[idx] == 'C') idx--;
+      while (idx >= 0 && s[idx] == 'S') idx--;
+      if (idx == -1) {
+        impossible = true;
+        break;
       }
+      s[idx] = 'S';
+      s[idx+1] = 'C';
 
-      cur = calc(query);
+      upd();
       count++;
     }
-    printf("Case #%d: ", i+1);
-    if (impossible) cout << "IMPOSSIBLE" << endl;
-    else cout << count << endl;
+
+    if (impossible) printf("IMPOSSIBLE\n");
+    else printf("%d\n", count);
   }
 
   return 0;
