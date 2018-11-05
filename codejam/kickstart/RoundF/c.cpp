@@ -15,6 +15,9 @@ typedef vector<int> vi;
 #define DOd(i, a, b) for (int i = (b)-1; i >= (a); --i)
 #define CONTAINS(set, x) (set.find(x) != set.end())
 
+// 3 in [a, b]: a, aa, aaa, aba, b, bab, bb, bbb
+// 3 in [a, b, c]: [a, b], [a, c], [b, c]
+
 int main()
 {
 
