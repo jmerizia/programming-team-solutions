@@ -6,60 +6,69 @@ typedef pair<int, int> pii;
 
 int T, w, h;
 vector<string> board;
-int closest_fire[1001][1001];
 vector<pii> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-int init_closest_fires() {
-    queue<pii> Q;
+int can_make_it() {
+    queue<pii> Q_player;
+    queue<pii> Q_fire;
     map<pii, int> depth;
+    set<pii> fire_spread;
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
             if (board[i][j] == '*') {
                 pii pos = {i, j};
-                Q.push(pos);
+                Q_fire.push(pos);
+                fire_spread.insert(pos);
+            }
+            if (board[i][j] == '@') {
+                pii pos = {i, j};
+                Q_player.push(pos);
                 depth[pos] = 0;
             }
         }
     }
-    while (!Q.empty()) {
-        pii u = Q.front(); Q.pop();
-        int x, y; tie(x, y) = u;
-        for (pii dir : dirs) {
-            int _x, _y; tie(_x, _y) = dir;
-            if (x+_x >= 0 && x+_x < h && y+_y >= 0 && y+_y < w) {
-                if (board[x+_x][y+_y] != '#') {
-                    pii v = {x+_x,y+_y};
-                    if (depth.find(v) == depth.end()) {
-                        depth[v] = depth[u]+1;
-                        closest_fire[v.first][v.second] = depth[v];
-                        Q.push(v);
+
+    while (!Q_player.empty()) {
+        // move fire
+        int n = Q_fire.size();
+        while (n--) {
+            pii u = Q_fire.front(); Q_fire.pop();
+            int x, y; tie(x, y) = u;
+            // printf("fire: %d %d\n", x, y);
+            for (pii dir : dirs) {
+                int _x, _y; tie(_x, _y) = dir;
+                int nx = x+_x, ny = y+_y;
+                if (nx >= 0 && nx < h && ny >= 0 && ny < w) {
+                    if (board[nx][ny] != '#') {
+                        pii v = {nx, ny};
+                        if (fire_spread.find(v) == fire_spread.end()) {
+                            fire_spread.insert(v);
+                            Q_fire.push(v);
+                        }
                     }
                 }
             }
         }
-    }
-    return INT_MAX;
-}
 
-int can_make_it(pii start) {
-    queue<pii> Q;
-    map<pii, int> depth;
-    Q.push(start);
-    depth[start] = 0;
-    while (!Q.empty()) {
-        pii u = Q.front(); Q.pop();
-        int x, y; tie(x, y) = u;
-        if (x == 0 || y == 0 || x == h-1 || y == w-1) return depth[u];
-        for (pii dir : dirs) {
-            int _x, _y; tie(_x, _y) = dir;
-            int next_depth = depth[u]+1;
-            if (x+_x >= 0 && x+_x < h && y+_y >= 0 && y+_y < w) {
-                if (board[x+_x][y+_y] == '.') {
-                    pii v = {x+_x,y+_y};
-                    if (closest_fire[v.first][v.second] > next_depth) {
-                        if (depth.find(v) == depth.end()) {
-                            depth[v] = next_depth;
-                            Q.push(v);
+        // move player
+        n = Q_player.size();
+        while (n--) {
+            pii u = Q_player.front(); Q_player.pop();
+            int x, y; tie(x, y) = u;
+            // printf("move: %d %d\n", x, y);
+            if (x == 0 || y == 0 || x == h-1 || y == w-1) return depth[u]+1;
+            for (pii dir : dirs) {
+                int _x, _y; tie(_x, _y) = dir;
+                int nx = x+_x, ny = y+_y;
+                if (nx >= 0 && nx < h && ny >= 0 && ny < w) {
+                    if (board[nx][ny] == '.') {
+                        pii v = {nx, ny};
+                        if (fire_spread.find(v) == fire_spread.end()) {
+                            // if fire has not spread here yet
+                            if (depth.find(v) == depth.end()) {
+                                depth[v] = depth[u]+1;
+                                Q_player.push(v);
+                            }
                         }
                     }
                 }
@@ -67,15 +76,6 @@ int can_make_it(pii start) {
         }
     }
     return -1;
-}
-
-pii find_start() {
-    for (int i = 0; i < h; i++) {
-        for (int j = 0; j < w; j++) {
-            if (board[i][j] == '@') return {i, j};
-        }
-    }
-    return {-1, -1};
 }
 
 int main()
@@ -88,11 +88,9 @@ int main()
             string row; cin >> row;
             board.push_back(row);
         }
-        init_closest_fires();
-        pii start = find_start();
-        int ans = can_make_it(start);
+        int ans = can_make_it();
         if (ans == -1) printf("IMPOSSIBLE\n");
-        else printf("%d\n", ans+1);
+        else printf("%d\n", ans);
     }
 
 
