@@ -15,6 +15,7 @@ typedef vector<int> vi;
 #define Edges(int) set<pair<int, int>>
 #define CONTAINS(C, x) (C.find(x) != C.end())
 #define range(v, a, b) vector<int> v((b)-(a)+1); iota(v.begin(),v.end(),a)
+#define between(c, a, b) ((a) <= (c) && (c) <= (b))
 // snippet-end
 
 int main()

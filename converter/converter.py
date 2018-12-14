@@ -2,8 +2,16 @@
 import sys, argparse, os, re, time
 from subprocess import call
 
-COMPILE_FLAGS = "-std=c++1y -Wall"
+COMPILE_FLAGS = "-fsanitize=address -std=c++14 -Wall"
 BE_FANCY = False
+LIB_DIR = "./library/"
+TIME_COMMAND = "/usr/bin/time"
+TIME_FORMAT = """
+# real %e
+# user %U
+# sys %S
+"""
+TERM_HEIGHT, TERM_WIDTH = map(int, os.popen("stty size", "r").read().split())
 
 ##if len(sys.argv) < 2:
 ##    print ("Usage: python convert.py [cpp file] [-i] [input 1] [input 2...]")
@@ -45,7 +53,7 @@ while True:
     with open(fname, 'r') as f:
         snippets_line = f.readline()
         orig += snippets_line
-        snippet_files = [x.strip() for x in snippets_line.split(',')]
+        snippet_files = [LIB_DIR + x.strip() for x in snippets_line.split(',')]
         line_idx = 2
         for line in f:
             orig += line
@@ -80,7 +88,7 @@ while True:
 
             if indent > prev_indent:
                 if indent - 4 != prev_indent:
-                    print("Indentation issue ({} to {}), line {}".format(prev_indent, indent,
+                    print("# Indentation issue ({} to {}), line {}".format(prev_indent, indent,
                             line_idx))
                     quit()
                 code += "\n" + prev_indent_str + "{"
@@ -184,11 +192,11 @@ while True:
         f.write(final)
 
     # compile:
-    print("Compiling {}...".format(TEMP_FNAME))
+    print("# Compiling {}...".format(TEMP_FNAME))
     error_comp = False
     rc = os.system("g++ {} {} -o {}.out".format(TEMP_FNAME, COMPILE_FLAGS, TEMP_FNAME))
     if rc != 0: # compilation failed
-        print("Error compiling")
+        print("# Error compiling")
         error_comp = True
 
     # don't remove, we need to submit it!
@@ -199,22 +207,22 @@ while True:
         error_exec = False
         if input_files:
             for input_file in input_files:
-                print("test {}:".format(input_file))
-                rc = os.system("time ./{}.out < {}".format(TEMP_FNAME, input_file))
+                print("# test {}:".format(input_file))
+                rc = os.system("{} -p -f \"{}\" ./{}.out < {}".format(TIME_COMMAND, TIME_FORMAT, TEMP_FNAME, input_file))
                 if rc != 0: # execution failed
-                    print("Error executing")
+                    print("# Error executing")
                     error_exec = True
         else:
-            rc = os.system("time ./{}.out".format(TEMP_FNAME))
+            rc = os.system("{} -p -f \"{}\" ./{}.out".format(TIME_COMMAND, TIME_FORMAT, TEMP_FNAME))
             if rc != 0: # execution failed
-                print("Error executing")
+                print("# Error executing")
                 error_exec = True
 
         if not error_exec:
             os.remove("{}.out".format(TEMP_FNAME))
 
     # Check for updates
-    print("Waiting for updates...")
+    print("# Waiting for updates...")
     while True:
         updated = False
         orig_now = ""
@@ -228,5 +236,5 @@ while True:
         if orig == orig_now and snippets == snippets_now:
             time.sleep(0.5)
         else:
-            print("Change found")
+            print("# Change found!")
             break

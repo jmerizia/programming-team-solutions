@@ -14,6 +14,7 @@ typedef vector<int> vi;
 #define Edges(int) set<pair<int, int>>
 #define CONTAINS(C, x) (C.find(x) != C.end())
 #define range(v, a, b) vector<int> v((b)-(a)+1); iota(v.begin(),v.end(),a)
+#define between(c, a, b) ((a) <= (c) && (c) <= (b))
 // dep:
 string format(string s, vector<string> v);
 template <class T> string to_string(pair<T, T> p);
@@ -28,9 +29,9 @@ string format(string s, vector<string> v) {
     string o;
     if (s.size() == 0) return o;
     int c = 0;
-    for (int i = 0; i < s.size(); i++) {
-        if (i < s.size() - 1 && s[i] == '{' && s[i+1] == '}') {
-            assert(v.size() != c);
+    for (int i = 0; i < (int)s.size(); i++) {
+        if (i < (int)s.size() - 1 && s[i] == '{' && s[i+1] == '}') {
+            assert((int)v.size() != c);
             o += v[c++], i++;
         } else {
             o += s[i];
@@ -202,7 +203,8 @@ int main() {
     auto C2 = IG.disjoint_components(rng(2, n+1)); // connected by 1
     int d = 0;
     for (int node : rng(2, n+1)) if (f(1, node)) d++;
-    if (k > d || k < C2.size())
-        cout << "impossible", exit(0);
-    cout << "possible";
+    if (between(k, C2.size(), d))
+        cout << "possible";
+    else
+        cout << "impossible";
 }

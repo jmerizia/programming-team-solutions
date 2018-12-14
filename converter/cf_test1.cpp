@@ -20,7 +20,8 @@ int main() {
     auto C2 = IG.disjoint_components(rng(2, n+1)); // connected by 1
     int d = 0;
     for (int node : rng(2, n+1)) if (f(1, node)) d++;
-    if (k > d || k < C2.size())
-        cout << "impossible", exit(0);
-    cout << "possible";
+    if (between(k, C2.size(), d))
+        cout << "possible";
+    else
+        cout << "impossible";
 }

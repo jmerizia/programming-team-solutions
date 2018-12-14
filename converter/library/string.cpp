@@ -13,9 +13,9 @@ string format(string s, vector<string> v) {
     string o;
     if (s.size() == 0) return o;
     int c = 0;
-    for (int i = 0; i < s.size(); i++) {
-        if (i < s.size() - 1 && s[i] == '{' && s[i+1] == '}') {
-            assert(v.size() != c);
+    for (int i = 0; i < (int)s.size(); i++) {
+        if (i < (int)s.size() - 1 && s[i] == '{' && s[i+1] == '}') {
+            assert((int)v.size() != c);
             o += v[c++], i++;
         } else {
             o += s[i];
