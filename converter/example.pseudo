@@ -1,0 +1,12 @@
+template,Set,Graph,string
+
+int main()
+    int V, E, start, target
+    READ V E start target
+    Edges (int) edges
+    DO (i, 0, E)
+        int a, b
+        READ a b
+        edges.insert({a, b})
+    Graph<int> G (edges)
+    PRINT (G.connected(start, target) ? "YES" : "NO")

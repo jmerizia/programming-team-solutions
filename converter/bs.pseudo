@@ -1,0 +1,7 @@
+template,BinarySearch,string
+
+int main()
+    auto f = [](double i){ return i*i; }
+    DO (i, 0, 10)
+        double m = BinarySearch<double, double> (f, 16.7, 0, 1000, i*10)
+        PRINTLN format("f({}) = {}", {to_string(m), to_string(f(m))})
