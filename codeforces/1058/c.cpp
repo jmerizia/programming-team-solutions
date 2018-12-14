@@ -15,8 +15,15 @@ typedef vector<int> vi;
 #define DOd(i, a, b) for (int i = (b)-1; i >= (a); --i)
 #define CONTAINS(set, x) (set.find(x) != set.end())
 
+int n;
+string st;
+
 int main()
 {
+  cin >> n >> st;
+  int a = 0;
 
+  printf("%d\n", a);
+        
   return 0;
 }

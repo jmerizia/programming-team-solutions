@@ -15,8 +15,19 @@ typedef vector<int> vi;
 #define DOd(i, a, b) for (int i = (b)-1; i >= (a); --i)
 #define CONTAINS(set, x) (set.find(x) != set.end())
 
+int n;
+
 int main()
 {
-
+  cin >> n;
+  int b;
+  while (n--) {
+    cin >> b;
+    if (b) {
+      cout << "HARD";
+      return 0;
+    }
+  }
+  cout << "EASY";
   return 0;
 }
