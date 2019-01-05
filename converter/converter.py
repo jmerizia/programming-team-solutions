@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys, argparse, os, re, time
 from subprocess import call
+# TODO: Work on the dependency system
 
 COMPILE_FLAGS = "-fsanitize=address -std=c++14 -Wall"
 BE_FANCY = False
