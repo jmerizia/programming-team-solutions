@@ -77,4 +77,16 @@ string to_string(map<T, T> m) {
     return s;
 }
 
+template <class T>
+string to_string(list<T> m) {
+  string s = "{";
+  int idx = 0, sz = m.size();
+  for (T e : m) {
+    s += to_string(e);
+    if (++idx < sz) s += ", ";
+  }
+  s += "}";
+  return s;
+}
+
 // snippet-end

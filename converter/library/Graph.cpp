@@ -5,7 +5,7 @@ using namespace std;
 // dep:string,Set
 template <class T>
 struct Graph {
-    // A general directed graph data structure that depends only on STL
+    // A general directed graph data structure
     map<T, Set<T>> adj;
     Set<T> nodes;
     Graph(Set<pair<T, T>> edges) {
@@ -17,7 +17,51 @@ struct Graph {
         }
     }
     Graph() {}
-    void add_edge(pair<T, T> edge) { adj[edge.first].insert(edge.second); }
+    Graph(istream& is, int lines) {
+      this->read(is, lines);
+    }
+    void add_edge(pair<T, T> edge) {
+      adj[edge.first].insert(edge.second);
+      nodes.insert(edge.first);
+      nodes.insert(edge.second);
+    }
+    void add_edge(T a, T b) {
+      adj[a].insert(b);
+      nodes.insert(a);
+      nodes.insert(b);
+    }
+    Set<pair<T, T>> edges() {
+      Set<pair<T, T>> st;
+      for (pair<T, Set<T>> a : adj)
+        for (T b : a.second)
+          if (!st.contains({b, a.first}))
+            st.insert({a.first, b});
+      return st;
+    }
+    Set<pair<T, T>> directed_edges() {
+      Set<pair<T, T>> st;
+      for (pair<T, Set<T>> a : adj)
+        for (T b : a.second)
+          st.insert({a.first, b});
+      return st;
+    }
+    bool is_tree() {
+      Set<T> seen;
+      queue<T> Q;
+      T root = *nodes.begin();
+      seen.insert(root);
+      Q.push(root);
+      while (!Q.empty()) {
+        T u = Q.front();
+        Q.pop();
+        for (T v : adj[u]) {
+          if (!seen.contains(v)) {
+            seen.insert(v);
+            Q.push(v);
+          }
+        }
+      }
+    }
     map<T, T> bfs_tree(T root) {
         map<T, T> tree;
         Set<T> vis;
@@ -46,12 +90,31 @@ struct Graph {
             cur = tree[cur];
         }
     }
+    int min_distance(T start, T target) {
+      map<T, T> tree = bfs_tree(start);
+      T cur = target;
+      int d = 0;
+      for (;;) {
+        if (cur == start) return d;
+        if (tree.find(cur) == tree.end()) return -1;
+        cur = tree[cur];
+        d++;
+      }
+    }
     Graph<T> operator+(const Graph<T>& other_graph) {
         Graph<T> new_graph = *this; //copy
         for (pair<T, Set<T>> pr : other_graph.adj) {
             new_graph.adj[pr.first] = new_graph.adj[pr.first] + pr.second;
         }
         return new_graph;
+    }
+    void read(istream& is, int lines) {
+      for (int i = 0; i < lines; i++) {
+        int a, b;
+        is >> a >> b;
+        this->add_edge(a, b);
+        this->add_edge(b, a);
+      }
     }
 };
 // snippet-end

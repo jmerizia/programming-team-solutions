@@ -93,6 +93,18 @@ string to_string(map<T, T> m) {
     return s;
 }
 
+template <class T>
+string to_string(list<T> m) {
+  string s = "{";
+  int idx = 0, sz = m.size();
+  for (T e : m) {
+    s += to_string(e);
+    if (++idx < sz) s += ", ";
+  }
+  s += "}";
+  return s;
+}
+
 // dep:string
 template <class T>
 struct Set {
@@ -149,62 +161,174 @@ Set<int> rng(int a, int b, int c) {
     for (int i = a; i < b; i+=c) k.insert(i);
     return k;
 }
-// dep:
+// dep:string,Set
 template <class T>
-struct ImplicitEdgeGraph {
-    // A general implicit graph class.
-    function<bool(T, T)> has_edge;
-    ImplicitEdgeGraph(function<bool(T, T)> _has_edge) {
-        has_edge = _has_edge;
+struct Graph {
+    // A general directed graph data structure
+    map<T, Set<T>> adj;
+    Set<T> nodes;
+    Graph(Set<pair<T, T>> edges) {
+        for (auto it = edges.begin(); it != edges.end(); it++) {
+            pair<T, T> e = *it;
+            adj[e.first].insert(e.second);
+            nodes.insert(e.first);
+            nodes.insert(e.second);
+        }
     }
-    Set<Set<T>> disjoint_components(Set<T> nodes) { // O(V)
-        Set<T> not_vis = nodes;
-        Set<Set<T>> disjoint_sets;
-        while (!not_vis.empty()) {
-            queue<T> Q;
-            T root = *not_vis.begin();
-            Set<T> connected_set ({root});
-            not_vis.remove(root);
-            Q.push(root);
-            while (!Q.empty()) {
-                T u = Q.front();
-                Q.pop();
-                for (T v : not_vis) {
-                    if (this->has_edge(u, v)) {
-                        connected_set.insert(v);
-                        not_vis.remove(v);
-                        Q.push(v);
-                    }
+    Graph() {}
+    Graph(istream& is, int lines) {
+      this->read(is, lines);
+    }
+    void add_edge(pair<T, T> edge) {
+      adj[edge.first].insert(edge.second);
+      nodes.insert(edge.first);
+      nodes.insert(edge.second);
+    }
+    void add_edge(T a, T b) {
+      adj[a].insert(b);
+      nodes.insert(a);
+      nodes.insert(b);
+    }
+    Set<pair<T, T>> edges() {
+      Set<pair<T, T>> st;
+      for (pair<T, Set<T>> a : adj)
+        for (T b : a.second)
+          if (!st.contains({b, a.first}))
+            st.insert({a.first, b});
+      return st;
+    }
+    Set<pair<T, T>> directed_edges() {
+      Set<pair<T, T>> st;
+      for (pair<T, Set<T>> a : adj)
+        for (T b : a.second)
+          st.insert({a.first, b});
+      return st;
+    }
+    bool is_tree() {
+      Set<T> seen;
+      queue<T> Q;
+      T root = *nodes.begin();
+      seen.insert(root);
+      Q.push(root);
+      while (!Q.empty()) {
+        T u = Q.front();
+        Q.pop();
+        for (T v : adj[u]) {
+          if (!seen.contains(v)) {
+            seen.insert(v);
+            Q.push(v);
+          }
+        }
+      }
+    }
+    map<T, T> bfs_tree(T root) {
+        map<T, T> tree;
+        Set<T> vis;
+        queue<T> Q;
+        vis.insert(root);
+        Q.push(root);
+        while (!Q.empty()) {
+            T u = Q.front();
+            Q.pop();
+            for (T v : adj[u]) {
+                if (!vis.contains(v)) {
+                    vis.insert(v);
+                    tree[v] = u;
+                    Q.push(v);
                 }
             }
-            disjoint_sets.insert(connected_set);
         }
-        return disjoint_sets;
+        return tree;
+    }
+    bool connected(T start, T target) {
+        map<T, T> tree = bfs_tree(start);
+        T cur = target;
+        for (;;) {
+            if (cur == start) return true;
+            if (tree.find(cur) == tree.end()) return false;
+            cur = tree[cur];
+        }
+    }
+    int min_distance(T start, T target) {
+      map<T, T> tree = bfs_tree(start);
+      T cur = target;
+      int d = 0;
+      for (;;) {
+        if (cur == start) return d;
+        if (tree.find(cur) == tree.end()) return -1;
+        cur = tree[cur];
+        d++;
+      }
+    }
+    Graph<T> operator+(const Graph<T>& other_graph) {
+        Graph<T> new_graph = *this; //copy
+        for (pair<T, Set<T>> pr : other_graph.adj) {
+            new_graph.adj[pr.first] = new_graph.adj[pr.first] + pr.second;
+        }
+        return new_graph;
+    }
+    void read(istream& is, int lines) {
+      for (int i = 0; i < lines; i++) {
+        int a, b;
+        is >> a >> b;
+        this->add_edge(a, b);
+        this->add_edge(b, a);
+      }
     }
 };
-// https://codeforces.com/contest/653/problem/E
-
-int main() {
-    int n, m, k;
-    cin >> n >> m >> k;
-    Set<pii> edges;
-    DO (i, 0, n) {
-        int u, v;
-        cin >> u >> v;
-        edges.insert({u, v});
+// dep:Set
+template <class T>
+struct UnionFind {
+    // A general UnionFind Data Structure
+    map<T, T> parent;
+    UnionFind(vector<T> items) {
+        for (T item : items) parent[item] = item;
     }
-    auto f = [edges](int a, int b) {
-        return !(edges.contains({a, b}) || edges.contains({b, a}));
-    };
-    ImplicitEdgeGraph<int> IG (f);
-    auto C1 = IG.disjoint_components(rng(1, n+1));
-    if (C1.size() > 1)
-        cout << "impossible", exit(0);
-    auto C2 = IG.disjoint_components(rng(2, n+1)); // connected by 1
-    int d = 0;
-    for (int node : rng(2, n+1)) if (f(1, node)) d++;
-    if (between(k, C2.size(), d))
-        cout << "possible";
-    else
-        cout << "impossible";
+    UnionFind(set<T> items) {
+        for (T item : items) parent[item] = item;
+    }
+    UnionFind(Set<T> items) {
+        for (T item : items) parent[item] = item;
+    }
+    T leader(T a) {
+        T cur = a;
+        while (cur != parent[cur]) cur = parent[cur];
+        return cur;
+    }
+    void compress(T a) {
+        T lead = this->leader(a);
+        T cur = this->parent[a];
+        while (cur != parent[cur]) {
+            parent[cur] = lead;
+            cur = parent[cur];
+        }
+    }
+    void UNION(T a, T b) {
+        T leader_a = leader(a);
+        T leader_b = leader(b);
+        if (leader_a != leader_b) parent[leader_b] = leader_a;
+    }
+    bool FIND(T a, T b) {
+        compress(a);
+        compress(b);
+        return leader(a) == leader(b);
+    }
+};
+
+int main()
+{
+  int N, M;
+  cin >> N >> M;
+  Graph<int> G (cin, M);
+  UnionFind<int> UF (rng(1, N+1));
+  for (auto edge : G.edges()) {
+    if (UF.FIND(edge.first, edge.second)) {
+      cout << "Bad";
+      return 0;
+    }
+    UF.UNION(edge.first, edge.second);
+  }
+  cout << "Good";
+
+  return 0;
 }

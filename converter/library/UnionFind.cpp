@@ -2,6 +2,7 @@
 using namespace std;
 
 // snippet-begin
+// dep:Set
 template <class T>
 struct UnionFind {
     // A general UnionFind Data Structure
@@ -12,6 +13,9 @@ struct UnionFind {
     UnionFind(set<T> items) {
         for (T item : items) parent[item] = item;
     }
+    UnionFind(Set<T> items) {
+        for (T item : items) parent[item] = item;
+    }
     T leader(T a) {
         T cur = a;
         while (cur != parent[cur]) cur = parent[cur];
@@ -19,7 +23,7 @@ struct UnionFind {
     }
     void compress(T a) {
         T lead = this->leader(a);
-        T cur = this->parent[a], prev = a;
+        T cur = this->parent[a];
         while (cur != parent[cur]) {
             parent[cur] = lead;
             cur = parent[cur];
