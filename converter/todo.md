@@ -37,3 +37,4 @@ Nit-picky things:
 [ ] Add line number comments in submit.cpp to make debugging easier
 [ ] Make graph-based dependency system
     (or make all snippets visible at all times)
+[ ] organize files
