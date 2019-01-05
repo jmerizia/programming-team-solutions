@@ -1,14 +1,11 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 // snippet-begin
-// dep:string,Set,UnionFind
 template <class T>
-struct Graph {
+class UndirectedGraph {
     // A general directed graph data structure
+public:
     map<T, Set<T>> adj;
     Set<T> nodes;
-    Graph(Set<pair<T, T>> edges) {
+    UndirectedGraph(Set<pair<T, T>> edges) {
         for (auto it = edges.begin(); it != edges.end(); it++) {
             pair<T, T> e = *it;
             adj[e.first].insert(e.second);
@@ -16,34 +13,34 @@ struct Graph {
             nodes.insert(e.second);
         }
     }
-    Graph() {}
-    Graph(istream& is, int lines) {
+    UndirectedGraph() {}
+    UndirectedGraph(istream& is, int lines) {
         this->read(is, lines);
     }
     void add_edge(pair<T, T> edge) {
-      adj[edge.first].insert(edge.second);
-      nodes.insert(edge.first);
-      nodes.insert(edge.second);
+        adj[edge.first].insert(edge.second);
+        nodes.insert(edge.first);
+        nodes.insert(edge.second);
     }
     void add_edge(T a, T b) {
-      adj[a].insert(b);
-      nodes.insert(a);
-      nodes.insert(b);
+        adj[a].insert(b);
+        nodes.insert(a);
+        nodes.insert(b);
     }
     Set<pair<T, T>> edges() {
-      Set<pair<T, T>> st;
-      for (pair<T, Set<T>> a : adj)
-          for (T b : a.second)
-              if (!st.contains({b, a.first}))
-                  st.insert({a.first, b});
-      return st;
+        Set<pair<T, T>> st;
+        for (pair<T, Set<T>> a : adj)
+            for (T b : a.second)
+                if (!st.contains({b, a.first}))
+                    st.insert({a.first, b});
+        return st;
     }
     Set<pair<T, T>> directed_edges() {
-      Set<pair<T, T>> st;
-      for (pair<T, Set<T>> a : adj)
-          for (T b : a.second)
-              st.insert({a.first, b});
-      return st;
+        Set<pair<T, T>> st;
+        for (pair<T, Set<T>> a : adj)
+            for (T b : a.second)
+                st.insert({a.first, b});
+        return st;
     }
     bool is_tree() {
         UnionFind<T> UF (nodes);
@@ -93,8 +90,8 @@ struct Graph {
             d++;
         }
     }
-    Graph<T> operator+(const Graph<T>& other_graph) {
-        Graph<T> new_graph = *this; //copy
+    UndirectedGraph<T> operator+(const UndirectedGraph<T>& other_graph) {
+        UndirectedGraph<T> new_graph = *this; //copy
         for (pair<T, Set<T>> pr : other_graph.adj) {
             new_graph.adj[pr.first] = new_graph.adj[pr.first] + pr.second;
         }
@@ -111,17 +108,3 @@ struct Graph {
 };
 // snippet-end
 
-int main()
-{
-    set<pair<int, int>> st;
-    st.insert({1, 2});
-    st.insert({2, 3});
-    st.insert({3, 4});
-    st.insert({4, 5});
-    st.insert({5, 6});
-    st.insert({6, 7});
-    Graph G (st);
-    map<int, int> tree = G.bfs_tree(1);
-    for (pair<int, int> edge : tree) printf("(%d, %d)\n", edge.first, edge.second);
-    return 0;
-}
