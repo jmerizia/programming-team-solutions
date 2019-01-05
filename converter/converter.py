@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys, argparse, os, re, time
 from subprocess import call
-# TODO: Work on the dependency system
 
 COMPILE_FLAGS = "-fsanitize=address -std=c++14 -Wall"
 BE_FANCY = False
@@ -13,10 +12,6 @@ TIME_FORMAT = """
 # sys %S
 """
 TERM_HEIGHT, TERM_WIDTH = map(int, os.popen("stty size", "r").read().split())
-
-##if len(sys.argv) < 2:
-##    print ("Usage: python convert.py [cpp file] [-i] [input 1] [input 2...]")
-##    quit()
 
 parser = argparse.ArgumentParser(description='C++ Singleton Helper.')
 parser.add_argument('fname', type=str)
