@@ -71,6 +71,20 @@ public:
                 st.insert({a.first, b});
         return st;
     }
+    vector<pair<T, T>> edges_by_weight() {
+        Set<pair<T, T>> E;
+        if (this->directed) E = this->directed_edges();
+        else E = this->edges();
+        vector<pair<T, T>> E_list;
+        for (pair<T, T> edge : this->edges()) { 
+            E_list.push_back(edge);
+        }
+        sort(E_list.begin(), E_list.end(),
+                [this](pair<T, T> a, pair<T, T> b) {
+                    return this->weights[a] < this->weights[b];
+                });
+        return E_list;
+    }
     bool is_tree() {
         UnionFind<T> UF (nodes);
         for (auto edge : edges()) {
@@ -110,6 +124,17 @@ public:
             if (tree.find(cur) == tree.end()) return false;
             cur = tree[cur];
         }
+    }
+    map<T, T> mst() { // kruskals
+        if (!this->weighted) {
+            printf("mst is only supported on weighted graphs");
+            abort();
+        }
+        UnionFind<T> UF (nodes);
+        for (pair<T, T> e : this->edges_by_weight())
+            if (!UF.FIND(e.first, e.second))
+                UF.UNION(e.first, e.second);
+        return UF.tree();
     }
     W djikstras(T start, T target) {
         if (!this->weighted) {

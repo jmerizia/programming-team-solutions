@@ -39,6 +39,9 @@ struct UnionFind {
         compress(b);
         return leader(a) == leader(b);
     }
+    map<T, T> tree() {
+        return this->parent;
+    }
 };
 // snippet-end
 

@@ -1,9 +1,11 @@
 Snippets that have been added so far:
 [x] Set (consider removing?)
-[x] Graph
+[x] Graph (come up with a solid interface)
 [x] - cycle detection
 [ ] - djikstras
 [ ] - maxflow
+[ ] - kruskals
+[ ] Tree (type of graph)
 [x] ImplicitEdgeGraph
 [ ] ImplicitGraph
 [x] UnionFind

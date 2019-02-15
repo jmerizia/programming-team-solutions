@@ -200,6 +200,7 @@ while True:
 
     if not error_comp:
         # execute:
+        print("# Executing {}...".format(TEMP_FNAME))
         error_exec = False
         if input_files:
             for input_file in input_files:
