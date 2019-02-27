@@ -2,203 +2,156 @@
 using namespace std;
 
 typedef long long ll;
-const ll MOD = 1e9+7;
-const int MAXN = 4e5+1;
-//int phi[301];
-vector<pair<int, int>> prime_divisors[301];
-map<int, int> bit_to_prime;
-map<int, int> prime_to_bit;
+const int MOD = 1e9+7;
+vector<int> primes;
+vector<int> inv_primes;
+ll prime_bits[301];
 
-template<class T>
-class SEGTREE {
+template <class T>
+class SegTree {
 public:
-    vector<T> t, d;
-    T flag;
-    int h, n;
-    function<T(T, T)> op;
-    SEGTREE(function<T(T, T)> _op, T _flag, vector<T>& initial_vals, int _n) {
-        this->flag = _flag;  // default value (i.e. 1 if mult, 0 if add)
-        this->op = _op; // pairwise operation
-        this->n = _n;
-        t = vector<T> (2*n);
-        d = vector<T> (n, _flag);
-        h = sizeof(int) * 8 - __builtin_clz(n);
-        // initialize values:
-        if (initial_vals.size() == _n) {
-            for (int i = 0; i < n; i++) t[i+n] = initial_vals[i];
-            for (int i = 0; i < n; i++) this->build(i+n);
-        }
+    vector<T> Tree, Lazy; T Flag; function<T(T,T,int)> Op; int Size;
+    SegTree(function<T(T,T,int)> _Op, T _Flag, vector<T>& Initial_Values) {
+        Op = _Op; Flag = _Flag; Size = Initial_Values.size();
+        Tree.resize(Size*4, Flag); Lazy.resize(Size*4, Flag);
+        for (int i = 0; i < Size; i++)
+            Modify(0, 0, Size-1, i, i, Initial_Values[i]);
     }
-    void apply(int p, T value) {
-        t[p] = this->op(t[p], value);
-        if (p < n /*is not leaf*/) d[p] = this->op(d[p], value);
-    }
-    void build(int p) { // update parents of p
-        while (p > 1) {
-            p >>= 1;
-            t[p] = this->op(t[p<<1], t[p<<1|1]);
-            t[p] = this->op(t[p], d[p]);
+    void Push(int node, int st, int en) {
+        if (Lazy[node] == Flag) return;
+        Tree[node] = Op(Tree[node], Lazy[node], en-st+1);
+        if (st != en) {
+            Lazy[node*2+1] = Op(Lazy[node*2+1], Lazy[node], 1);
+            Lazy[node*2+2] = Op(Lazy[node*2+2], Lazy[node], 1);
         }
+        Lazy[node] = Flag;
     }
-    void push(int p) {
-        for (int s = h; s > 0; s--) {
-            int i = p >> s;
-            if (d[i] != this->flag) {
-                this->apply(i<<1, d[i]);
-                this->apply(i<<1|1, d[i]);
-                d[i] = this->flag;
-            }
+    void Modify(int node, int st, int en, int left, int right, T value) {
+        Push(node, st, en);
+        if (st > en || en < left || right < st) return;
+        if (left <= st && en <= right) {
+            Lazy[node] = Op(Lazy[node], value, 1);
+            Push(node, st, en);
+            return;
         }
+        Modify(node*2+1, st, (st+en)/2, left, right, value);
+        Modify(node*2+2, (st+en)/2+1, en, left, right, value);
+        Tree[node] = Op(Tree[node*2+1], Tree[node*2+2], 1);
     }
-    void modify(int l, int r, T value) {
-        l += n, r += n;
-        int l0 = l, r0 = r;
-        for (; l < r; l >>= 1, r >>= 1) {
-            if (l&1) this->apply(l++, value);
-            if (r&1) this->apply(--r, value);
-        }
-        this->build(l0);
-        this->build(r0-1);
-    }
-    T query(int l, int r) {
-        l += n, r += n;
-        this->push(l);
-        this->push(r-1);
-        ll res = this->flag;
-        for (; l < r; l >>= 1, r >>= 1) {
-            if (l&1) res = this->op(res, t[l++]);
-            if (r&1) res = this->op(res, t[--r]);
-        }
-        return res;
+    T Query(int node, int st, int en, int left, int right) {
+        Push(node, st, en);
+        if (st > en || en < left || right < st) return Flag;
+        if (left <= st && en <= right) return Tree[node];
+        T p1 = Query(node*2+1, st, (st+en)/2, left, right);
+        T p2 = Query(node*2+2, (st+en)/2+1, en, left, right);
+        return Op(p1, p2, 1);
     }
 };
 
-ll mult_mod(ll a, ll b, ll mod)
+int mult(int a, int b) { return (int64_t(a) * b) % MOD; }
+
+int mod_pow(int a, int b, int r = 1)
 {
-    ll res = 0;
-    while (b) {
-        if (b&1) res = (res + a) % mod;
-        a = (a<<1)%mod;
-        b >>= 1;
+    while (b>0) {
+        if (b%2==0) {a = mult(a, a); b /= 2;}
+        else {r = mult(r, a); b--; }
     }
-    return res;
+    return r;
 }
-
-//int calc_phi(int k)
-//{
-//    int res = 1;
-//    for (pair<int, int> pr : prime_divisors[k]) {
-//        int p = pr.first, mult = pr.second;
-//        int pn = 1;
-//        for (int i = 0; i < mult; i++) {
-//            pn = (pn * p) % MOD;
-//        }
-//        res = (res * (pn - pn/p)) % MOD;
-//    }
-//    return res;
-//}
-
 
 void init()
 {
-    set<int> primes;
-
-    // calc divisors for 1..300
-    for (int p = 1; p <= 300; p++) {
-        int pp = p, ppp = p;
-        for (int i = 2; i*i <= pp; i++) {
-            int cnt = 0;
-            while (pp%i==0) {
-                pp /= i;
-                cnt++;
-            }
-            if (cnt) {
-                prime_divisors[ppp].push_back({i, cnt});
-                primes.insert(i);
-            }
-        }
-        if (pp > 1) {
-            prime_divisors[ppp].push_back({pp, 1});
-            primes.insert(pp);
-        }
-    }
-
+    // calc primes for 1..300
     // total primes: 62 => use ll bitmask w/ OR segtree
-    int cur = 0;
-    for (int p : primes) {
-        bit_to_prime[cur] = p;
-        prime_to_bit[p] = cur;
-        cur += 1;
-    }
-
-    // precompute phi for 1..300
-    //for (int i = 1; i <= 300; i++) {
-    //    phi[i] = calc_phi(i);
-    //}
-}
-
-ll get_prime_bits(int x)
-{
-    ll bits = 0;
-    for (pair<int, int> pr : prime_divisors[x]) {
-        int p = pr.first;
-        bits |= 1l << prime_to_bit[p];
-    }
-    return bits;
-}
-
-int answer_query(SEGTREE<ll>& treePROD, SEGTREE<ll>& treeOR, int l, int r) {
-    ll product = treePROD.query(l, r);
-    ll bits = treeOR.query(l, r);
-    cout << product << ' ' << bitset<64>(bits) << endl;
-
-    int bit = 0;
-    while (bits != 0) {
-        if (bits&1) {
-            ll p = bit_to_prime[bit];
-            product /= p;
-            product *= p - 1;
+    vector<int> sieve(301, 1);
+    sieve[1] = 0;
+    for (int p = 2; p*p <= 300; p++) {
+        if (sieve[p]) {
+            for (int i = p*p; i <= 300; i += p) {
+                sieve[i] = 0;
+            }
         }
-        bits >>= 1;
-        bit += 1;
+    }
+    for (int i = 1; i <= 300; i++) {
+        if (sieve[i]) {
+            primes.push_back(i);
+        }
+    }
+
+    inv_primes.resize(primes.size());
+    for (int i = 0; i < primes.size(); i++) {
+        inv_primes[i] = mod_pow(primes[i], MOD-2);
+    }
+
+    for (int i = 1; i <= 300; i++) {
+        ll bits = 0LL;
+        for (int j = 0; j < primes.size(); j++) {
+            if (i%primes[j]==0) {
+                bits |= 1LL << j;
+            }
+        }
+        prime_bits[i] = bits;
+    }
+}
+
+int answer_query(SegTree<int>& treePROD, SegTree<ll>& treeOR, int l, int r, int n) {
+    int product = treePROD.Query(0, 0, n-1, l, r);
+    ll bits = treeOR.Query(0, 0, n-1, l, r);
+
+    for (int i = 0; bits > 0; bits >>= 1, i++) {
+        if (bits&1) {
+            product = mult(product, primes[i]-1);
+            product = mult(product, inv_primes[i]);
+        }
     }
     return product;
 }
 
+void Solve()
+{
+    init();
+    int n, q;
+    cin >> n >> q;
+    vector<int> A (n);
+    for (int i = 0; i < n; i++) {
+        cin >> A[i];
+    }
+
+    auto f1 = [] (int a, int b, int k) { return mult(a, mod_pow(b, k)); };
+    SegTree<int> treePROD (f1, 1, A);
+    // init OR tree
+    vector<ll> B (n);
+    for (int i = 0; i < n; i++) {
+        B[i] = prime_bits[A[i]];
+    }
+    auto f2 = [] (ll a, ll b, int k) { return a|b; };
+    SegTree<ll> treeOR (f2, 0LL, B);
+
+    while (q--) {
+        string request; cin >> request;
+        int l, r; cin >> l >> r; l--; r--;
+        if (request == "TOTIENT") {
+            cout << answer_query(treePROD, treeOR, l, r, n) << endl;
+        } else if (request == "MULTIPLY") {
+            int x; cin >> x;
+            treePROD.Modify(0, 0, n-1, l, r, x);
+            treeOR.Modify(0, 0, n-1, l, r, prime_bits[x]);
+        }
+    }
+}
+
+
+
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-
-    init();
-
-    int n, q;
-    cin >> n >> q;
-    vector<ll> a (n);
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-
-    SEGTREE<ll> treePROD ([](ll _a, ll _b){return mult_mod(_a,_b,MOD);}, 1, a, n);
-    // init OR tree
-    vector<ll> init_or (n);
-    for (int i = 0; i < n; i++) {
-        init_or[i] = get_prime_bits(a[i]);
-    }
-    SEGTREE<ll> treeOR ([](ll _a, ll _b){return _a|_b;}, 0l, init_or, n);
-
-    while (q--) {
-        string query;
-        cin >> query;
-        if (query[0] == 'T') {
-            int l, r; cin >> l >> r;
-            cout << answer_query(treePROD, treeOR, l-1, r) << endl;
-        } else {
-            int l, r, x; cin >> l >> r >> x;
-            treePROD.modify(l-1, r, x);
-            ll bits = get_prime_bits(x);
-            treeOR.modify(l-1, r, bits);
-        }
-    }
-
+    Solve();
     return 0;
 }
+
+// takeaways:
+// for prime m, a inverse mod m is a^(m-2)
+// lazy eval in seg trees require "pushing"
+// or propagating a change to a node.
+// Whatever is stored in Lazy, must be applied
+// to that node once for each of its children.

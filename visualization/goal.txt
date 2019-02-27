@@ -1,0 +1,87 @@
+The goal of this is to make a frontend library
+that interacts with a C++ backend library to allow
+for the visualization of a specific state in
+execution and step through the code in real time.
+
+Each data structure capable of being visualized
+is expected to have a function for retrieving
+its current state, and updating its state.
+
+The easiest solution to this problem is to
+create an abstract class:
+
+~ class Visual {
+~     virtual string vis() = 0;
+~     void update() { /* blocking (more on this later) */ }
+~ };
+
+Thus a datastructure would inherit this,
+and implement vis():
+
+~ class DSU : public Visual {
+~     string vis() { return ""; }
+~     void update() { }
+~ }
+
+Then, to keep track of the execution of a
+script, the Context class is needed.
+It is instantiated before everything else
+and maintains a collection of Virtual objects:
+
+~ class Context : public Visual {
+~     vector<Visual> v;
+~     void add() {};
+~     void remove() {};
+~     string vis() { /* ... */ };
+~ };
+
+The Context.vis() function calls vis
+on all elements in the vector.
+Note that the Context class implements
+the abstract Visual class, since a Context
+can contain another Context.
+This is useful for recursive functions.
+
+With that in mind, one would implement a
+recursive function by creating a Context
+at the beginning of the function, and passing
+the calling Context as a parameter, then
+adding the new Context to the given Context:
+
+~ vector<int> merge_sort(vector<int> v, Context parent) {
+~     Context current;
+~     parent.add(current);
+~     // Do things with current Context ...
+~     parent.remove(current);
+~ }
+
+When the Visual.update() function is called on any Visual
+object, it momentarily stops the execution of the code
+and listens to the frontend to resume execution.
+Before this however, it sends to the frontend a string 
+representing the change the must occur on the frontend.
+
+The C++ program also sets up a server for serving the
+frontend code, pushing updates to the frontend, and
+waiting for step instructions.
+This class is instantiated once per C++ program and
+can be passed to all Visual objects, or be located
+globally.
+
+MACRO TRICKS
+
+In order to make things cleaner to submit, macros can be used.
+For example the following two lines allow for a macro that
+includes the supplied line x, or excludes it.
+
+~ #define LOC(x) x
+~ #define LOC(x)
+
+And it can be used like so:
+
+~ vector<int> merge_sort(vector<int> v LOC(, Context parent)) {
+~     LOC(Context current;)
+~     LOC(parent.add(current);)
+~     // Do things with current Context ...
+~     LOC(parent.remove(current);)
+~ }
