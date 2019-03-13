@@ -1,0 +1,120 @@
+filetype plugin indent on
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set number
+
+let g:snippets = '/home/jake/git/programming-team-solutions/snippets/'
+let g:template = '/home/jake/git/programming-team-solutions/templates/template.cpp'
+
+function! INCLUDE(name)
+    let fname = g:snippets.a:name.'/a.cpp'
+    echo fname
+    if !filereadable(fname)
+        echoerr 'Cannot find snippet '.a:name
+    else
+        let l:should_put = 0
+        for line in readfile(fname)
+            if line == '//snippet-begin'
+                let l:should_put = 1
+            elseif line == '//snippet-end'
+                let l:should_put = 0
+            elseif l:should_put
+                put = line
+            endif
+        endfor
+    endif
+endfunction
+command! -nargs=1 I :call INCLUDE(<f-args>)
+
+function! COMPILE(...)
+    let f=expand('%<')
+    let ff=expand('%')
+    execute 'silent ! printf "\n==compiling\n" && '.
+                \'g++ -ggdb -g -std=c++14 -Wshadow -o '.f.'.out '.ff.' && '.
+                \'printf "==success\n"'
+    redraw!
+    if !v:shell_error
+        for i in a:000
+            if filereadable(f.i.'.py')
+                execute 'silent ! printf "==generating '.f.i.'.py\n" &&'.
+                            \'/usr/bin/python3 '.f.i.'.py > '.f.i.'.in'
+                redraw!
+            endif
+            execute 'silent ! printf "==running '.f.'.cpp on '.f.i.'.in:\n<" && '.
+                        \'/usr/bin/time -f \>TIME=\%e ./'.f.'.out < '.f.i.'.in'
+            if filereadable(f.i.'.py')
+                execute 'silent ! rm '.f.i.'.in'
+                redraw!
+            endif
+        endfor
+        redraw!
+        ! rm *.out
+    else
+        !
+    endif
+endfunction
+command! -nargs=* C :call COMPILE(<f-args>) " use @: to repeat command
+
+function! NEW_FROM_TEMPLATE(fname)
+    let file = a:fname.'.cpp'
+    try
+        execute 'e '.file
+    catch
+        echoerr 'Save current file!'
+        return 1
+    endtry
+    if !filereadable(file)
+        for line in readfile(g:template)
+            put =line
+        endfor
+        normal ggdd
+    endif
+endfunction
+command! -nargs=1 T :call NEW_FROM_TEMPLATE(<f-args>)
+
+function! OPEN_CONTEST()
+    let letters = 'a b c d e f g h i j k l m n o p'
+    let numbers = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15'
+    for letter in split(letters)
+        let cpp_file = letter.'.cpp'
+        if !filereadable(cpp_file)
+            continue
+        endif
+        if letter != 'a'
+            execute ':tabe '.cpp_file
+        else
+            execute ':e '.cpp_file
+        endif
+        :vsplit
+        :wincmd l
+        let number = 1
+        while 1
+            if filereadable(letter.number.'.py')
+                if number > 1
+                    :split
+                    :wincmd j
+                endif
+                execute ':e '.letter.number.'.py'
+                let number += 1
+            elseif filereadable(letter.number.'.in')
+                if number > 1
+                    :split
+                    :wincmd j
+                endif
+                execute ':e '.letter.number.'.in'
+                let number += 1
+            else
+                break
+            endif
+        endwhile
+        :wincmd h
+    endfor
+    normal gt
+endfunction
+command! -nargs=0 OP :call OPEN_CONTEST(<f-args>)
+
+colorscheme desert
+nnoremap <leader>l :ls<cr>:b<space>
+nnoremap <leader>j :bp<cr>
+nnoremap <leader>k :bn<cr>
