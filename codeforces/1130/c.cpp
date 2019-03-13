@@ -13,7 +13,7 @@ struct DSU {
         groups.resize(n);
         card.resize(n, 1);
         for (int i = 0; i < n; i++) {
-            groups.push_back(i);
+            groups[i].push_back(i);
         }
         iota(p.begin(), p.end(), 0);
     }
@@ -51,12 +51,12 @@ void Solve()
         cin >> G[i];
     }
     DSU dsu (8000);
-    for (int i = 1; i < n-1; i++) {
-        for (int j = 1; j < n-1; j++) {
-            if (G[i][j] == G[i+1][j]) dsu.unite(i*100+j, (i+1)*100+j);
-            if (G[i][j] == G[i-1][j]) dsu.unite(i*100+j, (i-1)*100+j);
-            if (G[i][j] == G[i][j+1]) dsu.unite(i*100+j, i*100+j+1);
-            if (G[i][j] == G[i][j-1]) dsu.unite(i*100+j, i*100+j-1);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i<n-1 && G[i][j] == G[i+1][j]) dsu.unite(i*100+j, (i+1)*100+j);
+            if (i>0   && G[i][j] == G[i-1][j]) dsu.unite(i*100+j, (i-1)*100+j);
+            if (j<n-1 && G[i][j] == G[i][j+1]) dsu.unite(i*100+j, i*100+j+1);
+            if (j>0   && G[i][j] == G[i][j-1]) dsu.unite(i*100+j, i*100+j-1);
         }
     }
     int leader_start = dsu.leader(r1*100+c1);
@@ -71,13 +71,14 @@ void Solve()
         int ans = INT_MAX;
         for (int i = 0; i < v1.size(); i++) {
             for (int j = 0; j < v2.size(); j++) {
-                int a1 = v1[i] / 100;
-                int b1 = v1[i] % 100;
-                int a2 = v2[j] / 100;
-                int b2 = v2[j] % 100;
-                ans = min(ans, );
+                int x1 = v1[i] / 100;
+                int y1 = v1[i] % 100;
+                int x2 = v2[j] / 100;
+                int y2 = v2[j] % 100;
+                ans = min(ans, (y2-y1)*(y2-y1) + (x2-x1)*(x2-x1));
             }
         }
+        cout << ans;
     }
 }
 
