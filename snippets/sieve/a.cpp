@@ -2,21 +2,18 @@
 using namespace std;
 
 //snippet-begin
-vector<bool> is_prime ((int)1e6);
+bool is_prime[(int)1e6+1];
 vector<int> primes;
 void run_sieve(int n)
 {
-    is_prime[0] = false;
-    is_prime[1] = false;
-    for (int i = 2; i < n; i++)
-        is_prime[i] = true;
-    for (int i = 2; i < n; i++)
-        if (is_prime[i])
-            for (int j = i*i; j < n; j += i)
-                is_prime[j] = false;
-    for (int i = 1; i < n; i++)
-        if (is_prime[i])
-            primes.push_back(i);
+    memset(is_prime, true, sizeof(is_prime));
+    for (int p = 2; p*p <= n; p++)
+        if (is_prime[p])
+            for (int i = p*p; i <= n; i += p)
+                is_prime[i] = false;
+    for (int p = 2; p <= n; p++)
+        if (is_prime[p])
+            primes.push_back(p);
 }
 //snippet-end
 

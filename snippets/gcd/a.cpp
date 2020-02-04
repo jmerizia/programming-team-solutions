@@ -2,18 +2,21 @@
 using namespace std;
 
 //snippet-begin
-int gcd(int a, int b)
+template <class T>
+T gcd(T a, T b)
 {
-    if (a == 0)
+    if (a == 0) {
         return b;
-    return gcd(b%a, a);
+    } else {
+        return gcd(b%a, a);
+    }
 }
 //snippet-end
 
 void Solve() {
     int a, b;
     cin >> a >> b;
-    cout << gcd(a, b) << endl;
+    cout << gcd<int>(a, b) << endl;
 }
 
 int main() {
