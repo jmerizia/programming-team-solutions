@@ -9,12 +9,11 @@ typedef tuple<int, int, int> tiii;
 
 const int MAXN = 5000+1;
 int N, M, B[MAXN];
-map<pii, int> MP;
-vector<int> ADJ[MAXN];
-bool VIS[MAXN];
+vector<pii> ADJ[MAXN];
 vector<tiii> QUERIES;
-vector<pii> PRS;
-vector<vector<int>> P;
+vector<tiii> PRS;
+vector<vector<pii>> P;
+int tim = 0;
 
 bool check()
 {
@@ -24,9 +23,8 @@ bool check()
         int cur = b;
         int mn = 1e6;
         while (cur != a) {
-            int x = P[a][cur]; //before cur
-            pii edge = {x, cur};
-            int i = MP[edge];
+            int x, i;
+            tie(x, i) = P[a][cur]; //before cur
             mn = min(mn, B[i]);
             cur = x;
         }
@@ -37,13 +35,15 @@ bool check()
     return true;
 }
 
-void dfs(int u)
+void dfs(int u, int p, int pi, vector<pii>& prs)
 {
-    for (int v : ADJ[u]) {
-        if (!VIS[v]) {
-            VIS[v] = true;
-            PRS.pb({u, v});
-            dfs(v);
+    tim++;
+    prs[u] = {p, pi};
+    for (pii pr : ADJ[u]) {
+        int v, idx;
+        tie(v, idx) = pr;
+        if (v != p) {
+            dfs(v, u, idx, prs);
         }
     }
 }
@@ -51,14 +51,14 @@ void dfs(int u)
 void Solve()
 {
     cin >> N;
+    P = vector<vector<pii>>(N, vector<pii>(N));
+    //printf("Finished big alloc\n");
     FOR(i, 0, N-1) {
         int a, b;
         cin >> a >> b;
         a--; b--;
-        ADJ[a].pb(b);
-        ADJ[b].pb(a);
-        MP[{a, b}] = i;
-        MP[{b, a}] = i;
+        ADJ[a].pb({b, i});
+        ADJ[b].pb({a, i});
     }
     cin >> M;
     FOR(i, 0, M) {
@@ -67,29 +67,20 @@ void Solve()
         a--; b--;
         QUERIES.pb({a, b, g});
     }
-    P = vector<vector<int>>(N, vector<int>(N));
+    //printf("Finished reading\n");
     FOR(i, 0, N) {
         //note: this is faster than realloc:
-        PRS.clear(); 
-        FOR(j, 0, N) VIS[j] = false;
-        VIS[i] = true;
-        dfs(i);
-        for (pii pr : PRS) {
-            P[i][pr.second] = pr.first;
-        }
+        dfs(i, -1, -1, P[i]);
     }
-    //FOR(i, 0, N) {
-    //    FOR(j, 0, N) cout << P[i][j] << ' ';
-    //    cout << endl;
-    //}
+    //printf("%d\n", tim);
+    //printf("Finished preprocessing\n");
     for(tiii q : QUERIES) {
         int a, b, g;
         tie(a, b, g) = q;
         int cur = b;
         while (cur != a) {
-            int x = P[a][cur]; //before cur
-            pii edge = {x, cur};
-            int i = MP[edge];
+            int x, i;
+            tie(x, i) = P[a][cur]; //before cur
             B[i] = max(B[i], g);
             cur = x;
         }

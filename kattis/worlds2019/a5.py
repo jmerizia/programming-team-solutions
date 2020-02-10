@@ -1,0 +1,6 @@
+N = int(5e5)
+print(N)
+print("1 "*N)
+print(" ".join(map(str, range(2, N+2))))
+print("1 "*N)
+print(" ".join(map(str, range(1, N+1))))
