@@ -32,19 +32,23 @@ vector<pair<char, int>> path;
 void init()
 {
     FOR (i, 0, m-1) {
-        path.pb({'D', n-1});
-        path.pb({'U', n-1});
-        path.pb({'R', 1});
+        if (n-1>0) {
+            path.pb({'D', n-1});
+            path.pb({'U', n-1});
+        }
+        if (m>1) path.pb({'R', 1});
     }
 
-    path.pb({'D', 1});
+    if (n>1) path.pb({'D', 1});
     FOR(i, 0, n-1) {
-        path.pb({'L', m-1});
-        path.pb({'R', m-1});
+        if (m-1>0) {
+            path.pb({'L', m-1});
+            path.pb({'R', m-1});
+        }
         if (i != n-2) path.pb({'D', 1});
     }
-    path.pb({'U', n-1});
-    path.pb({'L', m-1});
+    if (n-1>0) path.pb({'U', n-1});
+    if (m-1>0) path.pb({'L', m-1});
     tot = 0;
     trav(p, path) tot += p.se;
 }
@@ -69,7 +73,8 @@ void Solve()
             }
         }
         cout << "YES" << endl;
-        trav(p, ans) cout << p.fi << ' ' << p.se << endl;
+        cout << sz(ans) << endl;
+        trav(p, ans) cout << p.se << ' ' << p.fi << endl;
     }
 }
 
