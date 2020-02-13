@@ -18,18 +18,32 @@ typedef vector<double> vd;
 #define se second
 #define bk back()
 #define ft front()
-#define pb push_back
+#define pb push_back()
 #define all(x) (x).begin(),(x).end()
 #define sz(x) x.size()
 #define trav(v,x) for(auto& v : x)
 const ll MOD = 1e9+7;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
-template<class T> T modpow(T a,T b,T m){
-    T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
+template<class T> T modpow(T a,T b,T m){T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
+
+int tc;
+ll m, n;
+
+ll tri(ll k)
+{
+    return k*(k+1)/2;
+}
 
 void Solve()
 {
-
+    cin >> tc;
+    while (tc--) {
+        cin >> n >> m;
+        ll b = m+1;
+        ll c = n-m;
+        ll ans = tri(n) - tri(c/b)*(b-(c%b)) - tri((c+b-1)/b)*(c%b);
+        cout << ans << endl;
+    }
 }
 
 int main() {

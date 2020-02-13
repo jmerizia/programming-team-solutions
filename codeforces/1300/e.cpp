@@ -4,23 +4,29 @@ typedef long long ll;
 typedef pair<int, int> pii;
 #define CONTAINS(set, x) (set.find(x) != set.end())
 #define FOR(i, a, b) for (int i = (a); i < (b); i++)
+#define FORd(i, a, b) for (int i = (b)-1; i >= (a); i--)
 
 const int MAXN = 1e6+1;
 int N, A[MAXN];
+vector<vector<int>> ans;
 
 void Solve()
 {
     cin >> N;
     FOR(i, 0, N) cin >> A[i];
-    int last = -1;
-    for(int i = 0; i < N; ) {
-        double avg = 0;
-        while (i < N && A[i] <= last) {
-            tot += A[i];
-            i++;
+    int t = 0, w = 0;
+    FORd(i, 0, N) {
+        if (t <= A[i] * w) {
+            t += A[i];
+            w++;
+        } else {
+            ans.push_back({t, w});
+            t = A[i];
+            w = 1;
         }
-        avg /= 
-        if (i < N) last = A[i];
+    }
+    FOR (i, 0, ans.size()) {
+        cout << ans[i][0] << ' ' << ans[i][1] << endl;
     }
 }
 
