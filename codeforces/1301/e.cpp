@@ -161,8 +161,15 @@ void Solve()
         cout << endl;
     }
     //cout << tim1 << endl;
-    Node tree ({0, 0}, {512, 512});
-    int ans = tree.query({3, 3}, {4, 4});
+    //Node tree ({0, 0}, {512, 512});
+    FOR(i, 0, n) {
+        FOR(j, 0, n) {
+            if (a[i][j] > 0) {
+
+            }
+        }
+    }
+    int ans = tree.query({4, 4}, {5, 5});
     cout << ans << endl;
     cout << tim2 << endl;
 }
