@@ -25,17 +25,44 @@ typedef vector<double> vd;
 const ll MOD = 1e9+7;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
 template<class T> T modpow(T a,T b,T m){T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
-template<class T> T inv(T a,T b){return 1<a?b-inv(b%a,a)*b/a:1;}
 
 //#define DBG
 int n;
 vi a;
+
+int bt(int sp=0) {
+#ifdef DBG
+    FOR(i, 0, sp) cout << ' ';
+    FOR(i, 0, n) cout << a[i] << ' ';
+    cout << endl;
+#endif
+    int ans = 0;
+    FOR(i, 0, n) if (a[i] > 0) ans++;
+    FOR(i, 0, n-1) {
+        if (a[i] == 0) continue;
+        int j = i+1;
+        while (j < n-1 && a[j] == 0) j++;
+        if (a[i] == a[j]) {
+            a[i]++;
+            a[j] = 0;
+            ans = min(ans, bt(sp+1));
+            a[i]--;
+            a[j] = a[i];
+        }
+    }
+#ifdef DBG
+    FOR(i, 0, sp) cout << ' ';
+    cout << ans << endl;
+#endif
+    return ans;
+}
 
 void Solve()
 {
     cin >> n;
     a.resize(n);
     FOR(i, 0, n) cin >> a[i];
+    cout << bt() << endl;
 }
 
 int main() {
