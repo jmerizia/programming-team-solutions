@@ -25,7 +25,7 @@ typedef vector<double> vd;
 const ll MOD = 1e9+7;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
 template<class T> T modpow(T a,T b,T m){T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
-template<class T> inv(T a,T b){return 1<a?b-inv(b%a,a)*b/a:1;}
+template<class T> T inv(T a,T b){return 1<a?b-inv(b%a,a)*b/a:1;}
 
 void Solve()
 {
