@@ -24,18 +24,47 @@ typedef vector<double> vd;
 #define trav(v,x) for(auto& v : x)
 const ll MOD = 1e9+7;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
-template<class T> T modpow(T a,T b,T m){T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
+template<class T> T modpow(T a,T b,T m){
+    T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
 template<class T> T inv(T a,T b){return 1<a?b-inv(b%a,a)*b/a:1;}
+void re(int& e){cin>>e;}
+void re(ll& e){cin>>e;}
+void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
+void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
+#define debug(...) printf(__VA_ARGS__)
+//#define debug(...)
 
-//#define DBG
-int n;
-vi a;
+const int N = 505;
+int n, a[N], mem[N][N];
+
+int dp(int l, int r)
+{
+    debug("%d %d\n", l, r);
+    int ret;
+    if (mem[l][r] != -1) {
+        ret = mem[l][r];
+    } else if (r-l==1) {
+        ret = a[l];
+    } else {
+        ret = -1;
+        FOR(i, l+1, r-1) {
+            int x = dp(l, i);
+            int y = dp(i, r);
+            if (x != -1 && y != -1 && x == y) {
+                ret = x+1;
+                break;
+            }
+        }
+    }
+    mem[l][r] = ret;
+    return ret;
+}
 
 void Solve()
 {
-    cin >> n;
-    a.resize(n);
-    FOR(i, 0, n) cin >> a[i];
+    re(n); re(a, n);
+    FOR(i, 0, n) FOR(j, 0, n) mem[i][j] = -1;
+    cout << dp(0, n) << endl;
 }
 
 int main() {

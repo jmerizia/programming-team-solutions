@@ -1,3 +1,4 @@
+//time:15:00+
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -27,16 +28,25 @@ template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
 template<class T> T modpow(T a,T b,T m){
     T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
 template<class T> T inv(T a,T b){return 1<a?b-inv(b%a,a)*b/a:1;}
-void re(int& e){cin>>e;}
-void re(ll& e){cin>>e;}
-void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
-void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
 //#define debug(...)
 
+const int N = 1e5+5;
+int t, n, m, p[N], q[N];
+
 void Solve()
 {
-
+    cin >> t;
+    while (t--) {
+        cin >> n;
+        FOR(i, 0, n) cin >> p[i];
+        cin >> m;
+        FOR(i, 0, m) cin >> q[i];
+        ll ep = 0, op = 0, eq = 0, oq = 0;
+        FOR(i, 0, n) if (p[i]%2) op++; else ep++;
+        FOR(i, 0, m) if (q[i]%2) oq++; else eq++;
+        cout << op*oq+ep*eq << endl;
+    }
 }
 
 int main() {
