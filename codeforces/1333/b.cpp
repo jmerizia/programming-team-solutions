@@ -32,12 +32,36 @@ void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
-#define endl ('\n')  // avoid flushing
 //#define debug(...)
+
+const int MAXN = (int)1e5+99;
+int t, n, a[MAXN], b[MAXN], c[MAXN];
 
 void Solve()
 {
-
+    re(t);
+    while (t--) {
+        re(n); re(a, n); re(b, n);
+        int cur = 0;
+        FOR(i, 0, n) {
+            c[i] = cur;
+            if (a[i] == -1) cur |= 1;
+            if (a[i] == 1) cur |= 2;
+        }
+        bool ans = true;
+        ROF(i, 0, n) {
+            if (a[i] > b[i]) {
+                if ((c[i]&1) != 1) {
+                    ans = false; break;
+                }
+            } else if (a[i] < b[i]) {
+                if ((c[i]&2) != 2) {
+                    ans = false; break;
+                }
+            }
+        }
+        cout << (ans ? "YES" : "NO") << endl;
+    }
 }
 
 int main() {

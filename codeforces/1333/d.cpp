@@ -35,9 +35,46 @@ void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define endl ('\n')  // avoid flushing
 //#define debug(...)
 
+int n, k, idx = 0;
+string a;
+
+vi next(int max_extra)
+{
+    vi v;
+    FOR(i, 0, n-1) {
+        idx = (idx+1)%(n-1);
+        if (a[idx]=='R'&&a[idx+1]=='L') {
+            v.pb(idx);
+            if (sz(v) == max_extra) break;
+        }
+    }
+    return v;
+}
+
+void no()
+{
+    cout << -1 << endl;
+    exit(0);
+}
+
 void Solve()
 {
-
+    cin >> n >> k >> a;
+    int max_moves = 0;
+    for (int i = 0, j = 0; i < n; i++) if (a[i] == 'L') max_moves += i-j++;
+    if (k > max_moves) no();
+    vvi ans;
+    for (vi v = next(max_moves-k+1); sz(v) && max_moves > 0 && k > 0; v = next(max_moves-k+1)) {
+        trav(i, v) a[i]='L', a[i+1]='R', max_moves--;
+        k--;
+        ans.pb(v);
+    }
+    if (max_moves > 0 || k > 0) no();
+    trav(v, ans) {
+        cout << sz(v) << ' ';
+        trav(i, v) cout << i+1 << ' ';
+        cout << endl;
+    }
 }
 
 int main() {

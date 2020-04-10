@@ -32,12 +32,21 @@ void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
-#define endl ('\n')  // avoid flushing
 //#define debug(...)
+
+int t, n, m;
 
 void Solve()
 {
-
+    cin >> t;
+    while (t--) {
+        cin >> n >> m;
+        cout << 'W';
+        FOR(i, 0, n) FOR(j, 0, m) {
+            if(!(i == 0 && j == 0)) cout << 'B';
+            if (j==m-1) cout << endl;
+        }
+    }
 }
 
 int main() {

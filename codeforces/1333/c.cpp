@@ -32,12 +32,26 @@ void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
-#define endl ('\n')  // avoid flushing
 //#define debug(...)
+
+const int MAXN = 2e5+99;
+int n, a[MAXN];
 
 void Solve()
 {
-
+    re(n); re(a, n);
+    map<ll, ll> mp;
+    ll k = 0, l = 0;
+    ll ans = 0;
+    FOR(i, 0, n) {
+        mp[k] = i;
+        k += a[i];
+        if (CONTAINS(mp, k)) {
+            l = max(mp[k]+1, l);
+        }
+        ans += i-l+1;
+    }
+    cout << ans << endl;
 }
 
 int main() {
