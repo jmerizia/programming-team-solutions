@@ -34,14 +34,50 @@ void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define endl ('\n')  // avoid flushing
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v){
-    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+    cout<<"[";FOR(i,0,sz(v))cout<<(i>0?", ":"")<<v[i];cout<<"]";}
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){
     cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+template <typename T>
+ostream& operator<<(ostream& os, const set<T>& v){
+    cout<<"{";for(auto it=v.begin();it!=v.end();it++){cout<<(it!=v.begin()?", ":"")<<*it;};cout<<"}";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const set<T, U>& v){
+    cout<<"{";for(auto it=v.begin();it!=v.end();it++){cout<<(it!=v.begin()?", ":"")<<it->fi;};cout<<"}";}
+
+int n, idx = 0;
+vector<pair<char, int>> s;
 
 void Solve()
 {
+    cin >> n;
+    FOR(i, 0, n) {
+        string str; cin >> str;
+        stringstream ss (str.substr(1, sz(str)));
+        int num; ss >> num;
+        s.pb({str[0], num});
+    }
+    map<int, char> st;
+    st[1] = 'c';
+    st[3] = 'b';
+    cout << st << endl;
 
+    //map<int, vector<int>> mp;
+    //FOR(i, 0, n) {//fill
+    //    int t = s[i].se;
+    //    mp[t] = vector<int>(2*n, 0);
+    //}
+    //FOR(i, 0, 2*n) {
+    //    char c = s[i%n].fi;
+    //    int t = s[i%n].se;
+    //    mp[t][i] += (c == 's') ? 1 : -1;
+    //}
+    //FOR(i, 0, 2*n) {
+    //    char c = s[i].fi;
+    //    int t = s[i].se;
+    //    print({c, t});
+    //    cout << mp[t][i] << endl;
+    //}
 }
 
 int main() {
