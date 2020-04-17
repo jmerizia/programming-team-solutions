@@ -61,61 +61,64 @@ pdd circle_center(pdd a, pdd b, pdd c)
     return {x, y};
 }
 
+#define ITERS 45
+#define MN -1500
+#define MX 1500
+
+bool check(pdd p, db d, vd &x, vd &y)
+{
+    FOR(i, 0, n) if (dist(p, {x[i], y[i]}) > d/2) return false;
+    return true;
+}
+
+db ts_d(pdd p, vd &x, vd &y)
+{
+    db mid, l = MN, r = MX;
+    FOR(i, 0, ITERS) {
+        mid = (r+l)/2;
+        if (check(p, mid, x, y)) r = mid;
+        else l = mid;
+    }
+    return mid;
+}
+
+db ts_py(db px, vd &x, vd &y)
+{
+    db m1, m2, v1, v2, l = MN, r = MX, d;
+    FOR(i, 0, ITERS) {
+        d = (r-l)/3;
+        m1 = l+d;
+        m2 = l+2*d;
+        v1 = ts_d({px, m1}, x, y);
+        v2 = ts_d({px, m2}, x, y);
+        if (v1 < v2) r = m2;
+        else l = m1;
+    }
+    return v1;
+}
+
 db calc(vd &x, vd &y)
 {
-    pdd a, b;
-    do {
-        db d = -1;
-        FOR(i, 0, n) FOR(j, i+1, n) {
-            db dd = dist({x[i], y[i]}, {x[j], y[j]});
-            if (dd > d) {
-                d = dd;
-                a = {x[i], y[i]};
-                b = {x[j], y[j]};
-            }
-        }
-    } while (0);
-    bool justtwo = true;
-    FOR(i, 0, n) {
-        pdd c = {x[i], y[i]};
-        pdd p = mid(a, b);
-        db r = dist(a, b)/2;
-        if (dist(p, c)>r) {
-            justtwo = false;
-            break;
-        }
+    db m1, m2, v1, v2, l = MN, r = MX, d;
+    FOR(i, 0, ITERS) {
+        d = (r-l)/3;
+        m1 = l+d;
+        m2 = l+2*d;
+        v1 = ts_py(m1, x, y);
+        v2 = ts_py(m2, x, y);
+        if (v1 < v2) r = m2;
+        else l = m1;
     }
-    cout << justtwo << endl;
-    if (justtwo) return dist(a, b);
-    db mnd = DBL_MAX;
-    FOR(i, 0, n) {
-        pdd c = {x[i], y[i]};
-        if (c == a || c == b) continue;
-        pdd p = circle_center(a, b, c);
-        db r = dist(c, p);
-        bool worked = true;
-        FOR(j, 0, n) {
-            pdd d = {x[j], y[j]};
-            if (d == a || d == b || d == c) continue;
-            if (dist(p, d)>r) {
-                worked = false;
-                break;
-            }
-        }
-        if (worked) {
-            mnd = min(mnd, r*2);
-        }
-    }
-    return mnd;
+    return v1;
 }
 
 void Solve()
 {
     cin >> n; vd x(n), y(n), z(n);
     FOR(i, 0, n) cin >> x[i] >> y[i] >> z[i];
-    FOR(i, 0, n) x[i] += (rand()%100)*1e-10;
-    FOR(i, 0, n) y[i] += (rand()%100)*1e-10;
-    FOR(i, 0, n) z[i] += (rand()%100)*1e-10;
+    //FOR(i, 0, n) x[i] += (rand()%100)*1e-10;
+    //FOR(i, 0, n) y[i] += (rand()%100)*1e-10;
+    //FOR(i, 0, n) z[i] += (rand()%100)*1e-10;
     db d1 = calc(x, y);
     db d2 = calc(y, z);
     db d3 = calc(x, z);
