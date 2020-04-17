@@ -4,6 +4,8 @@ set tabstop=4
 set shiftwidth=4
 set number
 
+"set relativenumber
+
 let g:snippets = '/home/jake/git/programming-team-solutions/snippets/'
 let g:template = '/home/jake/git/programming-team-solutions/templates/template.cpp'
 
@@ -31,7 +33,7 @@ function! COMPILE(...)
     let f=expand('%<')
     let ff=expand('%')
     execute 'silent ! printf "\n==compiling\n" && '.
-                \'g++ -ggdb -g -std=c++14 -Wshadow -o '.f.'.out '.ff.' && '.
+                \'g++ -ggdb -g -std=c++14 -Wshadow -Wunused -o '.f.'.out '.ff.' && '.
                 \'printf "==success\n"'
     redraw!
     if !v:shell_error
@@ -56,6 +58,36 @@ function! COMPILE(...)
 endfunction
 command! -nargs=* C :call COMPILE(<f-args>) " use @: to repeat command
 
+function! PERF(...)
+    let f=expand('%<')
+    let ff=expand('%')
+    execute 'silent ! printf "\n==compiling\n" && '.
+                \'g++ -ggdb -g -std=c++14 -Wshadow -o '.f.'.out '.ff.' && '.
+                \'printf "==success\n"'
+    redraw!
+    if !v:shell_error
+        for i in a:000
+            if filereadable(f.i.'.py')
+                execute 'silent ! printf "==generating '.f.i.'.py\n" &&'.
+                            \'/usr/bin/python3 '.f.i.'.py > '.f.i.'.in'
+                redraw!
+            endif
+            execute 'silent ! printf "==perf '.f.'.cpp on '.f.i.'.in ..." && '.
+                        \'perf record ./'.f.'.out < '.f.i.'.in && perf report -i ./perf.data'
+            if filereadable(f.i.'.py')
+                execute 'silent ! rm '.f.i.'.in'
+                redraw!
+            endif
+        endfor
+        redraw!
+        ! rm *.out
+        ! rm perf.data
+    else
+        !
+    endif
+endfunction
+command! -nargs=* P :call PERF(<f-args>) " use @: to repeat command
+
 function! NEW_FROM_TEMPLATE(fname)
     let file = a:fname.'.cpp'
     try
@@ -78,13 +110,18 @@ function! OPEN_CONTEST()
     let numbers = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15'
     for letter in split(letters)
         let cpp_file = letter.'.cpp'
-        if !filereadable(cpp_file)
+        let py_file = letter.'.py'
+        if filereadable(cpp_file)
+            let code_file = cpp_file
+        elseif filereadable(py_file)
+            let code_file = py_file
+        else
             continue
         endif
         if letter != 'a'
-            execute ':tabe '.cpp_file
+            execute ':tabe '.code_file
         else
-            execute ':e '.cpp_file
+            execute ':e '.code_file
         endif
         :vsplit
         :wincmd l
