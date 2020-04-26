@@ -36,8 +36,7 @@ template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v){
     cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
 template <typename T, typename U>
-ostream& operator<<(ostream& os, const pair<T, U>& v){
-    cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
 void Solve()
 {

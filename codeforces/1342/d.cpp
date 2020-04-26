@@ -38,25 +38,29 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-int t;
-ll a, b, q, l, r;
-ll cnt(ll m, ll off) { return (r-l+1)/m+(l%m==off); }
+const int MAXN = 2e5+99;
+int n, k, m[MAXN], c[MAXN];
+vector<vi> v;
+int tim = 0;
 
 void Solve()
 {
-    cin >> t;
-    l = 1, r = 9;
-    cout << cnt(12, 2);
-    exit(0);
-    while (t--) {
-        cin >> a >> b >> q;
-        ll lcm = a*b/gcd(a, b);
-        FOR(qq, 0, q) {
-            cin >> l >> r;
-            ll tot = 0;
-            FOR(i, 0, max(a, b)) tot += cnt(lcm, i);
-            cout << tot << ' ';
-        }
+    cin >> n >> k;
+    FOR(i, 0, n) cin >> m[i];
+    FOR(i, 0, k) cin >> c[i];
+    sort(m, m+n, greater<int>());
+    v.resize(n);
+    FOR(i, 0, n) {
+        lower_bound(all(v), c[m[i]-1], [](vi& vec, int val){ return sz(vec) >= val; })->pb(m[i]);
+        //cout << m[i] << ' ' << j << endl;
+    }
+    //cout << tim << endl;
+    int ans = 0;
+    FOR(i, 0, n) if (sz(v[i])>0) ans++; else break;
+    cout << ans << endl;
+    FOR(i, 0, ans) {
+        cout << sz(v[i]) << ' ';
+        trav(e, v[i]) cout << e << ' ';
         cout << endl;
     }
 }

@@ -22,7 +22,7 @@ typedef vector<double> vd;
 #define all(x) (x).begin(),(x).end()
 #define sz(x) x.size()
 #define trav(v,x) for(auto& v : x)
-const ll MOD = 1e9+7;
+const ll MOD = 998244353;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
 template<class T> T modpow(T a,T b,T m){
     T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
@@ -38,27 +38,15 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-int t;
-ll a, b, q, l, r;
-ll cnt(ll m, ll off) { return (r-l+1)/m+(l%m==off); }
+ll n, k;
 
 void Solve()
 {
-    cin >> t;
-    l = 1, r = 9;
-    cout << cnt(12, 2);
-    exit(0);
-    while (t--) {
-        cin >> a >> b >> q;
-        ll lcm = a*b/gcd(a, b);
-        FOR(qq, 0, q) {
-            cin >> l >> r;
-            ll tot = 0;
-            FOR(i, 0, max(a, b)) tot += cnt(lcm, i);
-            cout << tot << ' ';
-        }
-        cout << endl;
-    }
+    cin >> n >> k;
+    if (k >= n) { cout << 0 << endl; return; }
+    ll ans = 2*n;
+    FOR(i, n-k+1, n+1) ans *= i;
+    cout << ans << endl;
 }
 
 int main() {
