@@ -42,6 +42,8 @@ ostream& operator<<(ostream& os, const pair<T, U>& v){cout<<"{"<<v.fi<<", "<<v.s
 const db EPS = 1e-8;
 const int MAXN = 5001;
 int n;
+vector<pdd> lines;
+vector<pdd> check_points;
 
 db dist(pdd a, pdd b) { return sqrt(pow(a.fi-b.fi, 2) + pow(a.se-b.se, 2)); }
 pdd mid(pdd a, pdd b) { return {(a.fi+b.fi)/2, (a.se+b.se)/2}; }
@@ -64,28 +66,40 @@ pdd circle_center(pdd a, pdd b, pdd c)
 #define ITERS 45
 #define MN -1500
 #define MX 1500
+#define LINES 50
+int bad_cnt = 0;
+int good_cnt = 0;
+//db MN = 5000;
+//db MX = -5000;
 
 bool check(pdd p, db d, vd &x, vd &y)
 {
-    FOR(i, 0, n) if (dist(p, {x[i], y[i]}) > d/2) return false;
-    return true;
+    // Given, a circle query, determine if any point lies outside
+    bool check = true;
+    FOR(i, 0, n) if (2*dist(p, {x[i], y[i]}) > d) { check = false; break; }
+
+    bool ans = true;
+    trav(c, check_points) if (2*dist(p, c) > d) { ans = false; break; }
+    if (ans != check) bad_cnt++;
+    else good_cnt++;
+    return ans;
 }
 
 db ts_d(pdd p, vd &x, vd &y)
 {
-    db mid, l = MN, r = MX;
-    FOR(i, 0, ITERS) {
-        mid = (r+l)/2;
-        if (check(p, mid, x, y)) r = mid;
-        else l = mid;
+    db m, l = MN, r = MX;
+    FOR(i, 0, 40) {
+        m = (r+l)/2;
+        if (check(p, m, x, y)) r = m;
+        else l = m;
     }
-    return mid;
+    return m;
 }
 
 db ts_py(db px, vd &x, vd &y)
 {
-    db m1, m2, v1, v2, l = MN, r = MX, d;
-    FOR(i, 0, ITERS) {
+    db m1=1, m2=2, v1, v2, l = MN, r = MX, d;
+    while(abs(m2-m1)>EPS) {
         d = (r-l)/3;
         m1 = l+d;
         m2 = l+2*d;
@@ -99,8 +113,30 @@ db ts_py(db px, vd &x, vd &y)
 
 db calc(vd &x, vd &y)
 {
-    db m1, m2, v1, v2, l = MN, r = MX, d;
-    FOR(i, 0, ITERS) {
+    // For each line, pre-process the projections
+    check_points.clear();
+    trav(line, lines) {
+        db m, b; tie(m, b) = line;
+        db mnd = 5000;
+        db mxd = -5000;
+        pdd mnp, mxp;
+        FOR(i, 0, n) {
+            db dd = (m*y[i]+x[i])/(m*m+1); // check this
+            if (dd < mnd) {
+                mnd = dd;
+                mnp = {x[i], y[i]};
+            }
+            if (dd > mxd) {
+                mxd = dd;
+                mxp = {x[i], y[i]};
+            }
+        }
+        check_points.pb(mnp);
+        check_points.pb(mxp);
+    }
+
+    db m1=1, m2=2, v1, v2, l = MN, r = MX, d;
+    while (abs(m2-m1)>EPS) {
         d = (r-l)/3;
         m1 = l+d;
         m2 = l+2*d;
@@ -114,14 +150,18 @@ db calc(vd &x, vd &y)
 
 void Solve()
 {
+    // preprocess some random lines:
+    FOR(i, 0, LINES) {
+        db m = (rand()%1000)*1e-3;
+        db b = 0.0;
+        lines.pb({m, b});
+    }
     cin >> n; vd x(n), y(n), z(n);
     FOR(i, 0, n) cin >> x[i] >> y[i] >> z[i];
-    //FOR(i, 0, n) x[i] += (rand()%100)*1e-10;
-    //FOR(i, 0, n) y[i] += (rand()%100)*1e-10;
-    //FOR(i, 0, n) z[i] += (rand()%100)*1e-10;
     db d1 = calc(x, y);
     db d2 = calc(y, z);
     db d3 = calc(x, z);
+    cout << bad_cnt << ' ' << good_cnt << endl;
     cout << min(d1, min(d2, d3)) << endl;
 }
 
