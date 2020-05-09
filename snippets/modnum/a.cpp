@@ -22,11 +22,8 @@ typedef vector<double> vd;
 #define all(x) (x).begin(),(x).end()
 #define sz(x) x.size()
 #define trav(v,x) for(auto& v : x)
-const ll MOD = 998244353;
+const ll MOD = 1e9+7;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
-template<class T> T modpow(T a,T b,T m){
-    T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
-template<class T> T inv(T a,T b){return 1<a?b-inv(b%a,a)*b/a:1;}
 void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
@@ -38,22 +35,46 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-const int MAXN = 2e5+99;
-ll n, k;
-ll fact[MAXN];
+//snippet-begin
+template<class T>
+pair<T, T> bezout(T& a, T& b) {
+}
+template<class T> T modpow(T a,T b,T m){
+    T res=1;
+    for(;b;b/=2,a=(a*a)%m)
+        if(b&1)
+            res=(res*a)%m;
+    return res;
+}
+template <const int &MOD>
+class modnum { public:
+    int n;
+    modnum(int _n) { n = _n % MOD + (_n < 0 ? 0 : _n); }
+    explicit operator int() const { return n; }
+    explicit operator ll() const { return n; }
+    modnum inv() {
+        int q, r0 = MOD, r1 = n, t0 = 0, t1 = 1;
+        while (r1 != 0) {
+            q = r0/r1;
+            r0 = r1;
+            r1 = 
+        }
+    }
+
+    modnum& operator+= (modnum o) {n = (n+o.n)%MOD; return *this;}
+    modnum& operator-= (modnum o) {n = (n+o.n)%MOD; return *this;}
+    modnum& operator*= (modnum o) {n = (((ll)n)*o.n)%MOD; return *this;}
+};
+const int MAXN = 1000;
+int fact[MAXN];
+void init_fact(int n) { fact[0] = 1; FOR(i, 1, n+1) fact[i] = i*fact[i-1]; }
+//using num = modnum<101>;
+//snippet-end
 
 void Solve()
 {
-    cin >> n >> k;
-    fact[0] = 1;
-    FOR(i, 1, n+1) fact[i] = (i*fact[i-1])%MOD;
-    auto choose = [&](ll n, ll k) { return fact[n]};
-    FOR(i, 0, 10) cout << fact[i] << endl;
-    exit(0);
-    if (k >= n) { cout << 0 << endl; return; }
-    ll ans = 0;
-    //FOR(i, 1, n-k+1) ans += choose(n, i)
-    cout << ans << endl;
+    //cout << inv(5, 7);
+    cout << (-10)%3 + 3 << endl;
 }
 
 int main() {
