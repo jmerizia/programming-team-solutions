@@ -34,17 +34,14 @@ void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
 //#define debug(...)
 
+ll n, k;
+
 void Solve()
 {
-    int t; re(t);
-    while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
-    }
+    cin >> n >> k;
+    ll ans = 0;
+    for (int i = 0; i < k && n > 1; i++) ans += (n-1)*2-1, n-=2;
+    cout << ans;
 }
 
 int main() {

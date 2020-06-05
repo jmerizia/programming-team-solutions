@@ -36,14 +36,26 @@ void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 
 void Solve()
 {
-    int t; re(t);
+    const int N = 200000+99;
+    int t, n; vi a(N);
+    re(t);
     while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+        re(n); re(a, n);
+        multiset<int> L, R;
+        set<int> Lu, Ru;
+        FOR(i, 0, n) R.insert(a[i]), Ru.insert(a[i]);
+        vector<pii> ans;
+        FOR(i, 0, n-1) {
+            L.insert(a[i]);
+            R.erase(R.find(a[i]));
+            Lu.insert(a[i]);
+            if (!CONTAINS(R, a[i]) && CONTAINS(Ru, a[i])) Ru.erase(Ru.find(a[i]));
+            if (*L.rbegin()==sz(L) && sz(L) == sz(Lu) &&
+                    *R.rbegin()==sz(R) && sz(R) == sz(Ru))
+                ans.pb({sz(L), sz(R)});
+        }
+        cout << sz(ans) << endl;
+        trav(e, ans) cout << e.fi << ' ' << e.se << endl;
     }
 }
 

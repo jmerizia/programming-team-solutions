@@ -22,7 +22,7 @@ typedef vector<double> vd;
 #define all(x) (x).begin(),(x).end()
 #define sz(x) x.size()
 #define trav(v,x) for(auto& v : x)
-const ll MOD = 1e9+7;
+const ll MOD = 998244353;
 template<class T> T gcd(T a,T b){return b?gcd(b,a%b):a;}
 template<class T> T modpow(T a,T b,T m){
     T res=1;for(;b;b/=2,a=(a*a)%m)if(b&1)res=(res*a)%m;return res;}
@@ -31,20 +31,29 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define debug(...) printf(__VA_ARGS__)
-//#define debug(...)
+#define endl ('\n')  // avoid flushing
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v){
+    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+
+const int MAXN = 2e5+99;
+ll n, k;
+ll fact[MAXN];
 
 void Solve()
 {
-    int t; re(t);
-    while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
-    }
+    cin >> n >> k;
+    fact[0] = 1;
+    FOR(i, 1, n+1) fact[i] = (i*fact[i-1])%MOD;
+    auto choose = [&](ll n, ll k) { return fact[n]};
+    FOR(i, 0, 10) cout << fact[i] << endl;
+    exit(0);
+    if (k >= n) { cout << 0 << endl; return; }
+    ll ans = 0;
+    //FOR(i, 1, n-k+1) ans += choose(n, i)
+    cout << ans << endl;
 }
 
 int main() {

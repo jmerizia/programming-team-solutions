@@ -31,20 +31,36 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
+void re(vll& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
 //#define debug(...)
 
+void no()
+{
+    cout << -1 << endl; exit(0); 
+}
+
 void Solve()
 {
-    int t; re(t);
-    while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+    ll n, m; re(n); re(m); vll l(m); re(l, m);
+    ll tot = 0;
+    FOR(i, 0, m) tot += l[i];
+    ll o = tot-n;
+    if (o < 0) no();
+    ll cur = 1, k = 0;
+    vi ans;
+    FOR(i, 0, m) {
+        if (cur+l[i]-1 > n) {
+            no();
+        } else {
+            ans.pb(cur);
+            k = min(l[i]-1, o);
+            cur += l[i]-k;
+            o -= k;
+        }
     }
+    FOR(i, 0, m) cout << ans[i] << ' ';
+    cout << endl;
 }
 
 int main() {

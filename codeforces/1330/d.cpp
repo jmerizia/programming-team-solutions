@@ -34,16 +34,20 @@ void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
 //#define debug(...)
 
+int t, d, m, dp[100];
+
 void Solve()
 {
-    int t; re(t);
+    cin >> t;
     while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+        cin >> d >> m;
+        int k = 0; while ((1 << k) <= d) k++;
+        dp[0] = 1%m;
+        FOR(i, 1, k) {
+            int c = min(d+1, 1<<(i+1)) - (1<<i);
+            dp[i] = ((dp[i-1] + c)%m + (((ll)c)*dp[i-1])%m)%m;
+        }
+        cout << dp[k-1] << endl;
     }
 }
 

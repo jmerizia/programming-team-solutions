@@ -31,19 +31,28 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define debug(...) printf(__VA_ARGS__)
-//#define debug(...)
+#define endl ('\n')  // avoid flushing
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v){
+    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+
 
 void Solve()
 {
-    int t; re(t);
+    int t, n;
+    re(t);
     while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+        re(n); vi a(n, 0), c(n+1, 0); re(a, n);
+        FOR(i, 0, n) c[a[i]]++;
+        int mx = -1, mxa = 0;
+        FOR(i, 1, n+1) if (c[i]>mx) mx=c[i],mxa=i;
+        set<int> uniq;
+        int u = 0;
+        FOR(i, 0, n) if (!CONTAINS(uniq, a[i]) && a[i]!=mxa) u++, uniq.insert(a[i]);
+        if (mx > u) mx--, u++;
+        cout << min(mx, u) << endl;
     }
 }
 

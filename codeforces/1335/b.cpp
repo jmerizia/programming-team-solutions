@@ -31,19 +31,23 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define debug(...) printf(__VA_ARGS__)
-//#define debug(...)
+#define endl ('\n')  // avoid flushing
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v){
+    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+
+int t, n, a, b;
 
 void Solve()
 {
-    int t; re(t);
+    cin >> t;
     while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+        cin >> n >> a >> b;
+        string s (n, 'a');
+        FOR(i, 0, n) s[i]+=i%b;
+        cout << s << endl;
     }
 }
 

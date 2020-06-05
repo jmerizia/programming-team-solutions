@@ -31,19 +31,33 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define debug(...) printf(__VA_ARGS__)
-//#define debug(...)
+#define endl ('\n')  // avoid flushing
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v){
+    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+
+int t;
+ll a, b, q, l, r;
+ll cnt(ll m, ll off) { return (r-l+1)/m+(l%m==off); }
 
 void Solve()
 {
-    int t; re(t);
+    cin >> t;
+    l = 1, r = 9;
+    cout << cnt(12, 2);
+    exit(0);
     while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+        cin >> a >> b >> q;
+        ll lcm = a*b/gcd(a, b);
+        FOR(qq, 0, q) {
+            cin >> l >> r;
+            ll tot = 0;
+            FOR(i, 0, max(a, b)) tot += cnt(lcm, i);
+            cout << tot << ' ';
+        }
+        cout << endl;
     }
 }
 

@@ -32,18 +32,54 @@ void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
+#define endl ('\n')  // avoid flushing
 //#define debug(...)
+
+int n, grid[599][599];
+map<pii, pii> mp;
+vector<pii> base = {
+    {0, 0}, //1
+    {1, 0}, //2
+    {1, 1}, //3
+    {2, 0}, //4
+    {1, 2}, //5
+    {2, 2}, //6
+    {0, 1}, //7
+    {2, 1}, //8
+    {0, 2}, //9
+    {-1, -1}, //fin
+};
 
 void Solve()
 {
-    int t; re(t);
-    while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+    cin >> n;
+    if (n < 3) cout << -1, exit(0);
+    FOR(i, 0, sz(base)-1) mp[base[i]] = base[i+1];
+    FOR(layer, 3, n) {
+        if (layer % 2 == 1) {
+            FOR(i, 0, layer) mp[{layer, i}] = {layer, i+1};
+            FOR(i, 1, layer+1) mp[{i, layer}] = {i-1, layer};
+            if (layer != n-1) mp[{0, layer}] = {0, layer+1};
+            else mp[{0, layer}] = {0, 0};
+        } else {
+            FOR(i, 1, layer+1) mp[{layer, i}] = {layer, i-1};
+            FOR(i, 0, layer) mp[{i, layer}] = {i+1, layer};
+            if (layer != n-1) mp[{layer, 0}] = {layer+1, 0};
+            else mp[{layer, 0}] = {0, 0};
+        }
+    }
+    pii cur; 
+    if (n > 3) cur = {3, 0};
+    else cur = {0, 0};
+    int idx = 1;
+    while (cur.fi != -1) {
+        grid[cur.fi][cur.se] = idx++;
+        cur = mp[cur];
+    }
+
+    FOR(i, 0, n) {
+        FOR(j, 0, n) cout << grid[i][j] << ' ';
+        cout << endl;
     }
 }
 

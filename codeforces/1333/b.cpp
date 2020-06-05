@@ -34,16 +34,33 @@ void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
 #define debug(...) printf(__VA_ARGS__)
 //#define debug(...)
 
+const int MAXN = (int)1e5+99;
+int t, n, a[MAXN], b[MAXN], c[MAXN];
+
 void Solve()
 {
-    int t; re(t);
+    re(t);
     while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+        re(n); re(a, n); re(b, n);
+        int cur = 0;
+        FOR(i, 0, n) {
+            c[i] = cur;
+            if (a[i] == -1) cur |= 1;
+            if (a[i] == 1) cur |= 2;
+        }
+        bool ans = true;
+        ROF(i, 0, n) {
+            if (a[i] > b[i]) {
+                if ((c[i]&1) != 1) {
+                    ans = false; break;
+                }
+            } else if (a[i] < b[i]) {
+                if ((c[i]&2) != 2) {
+                    ans = false; break;
+                }
+            }
+        }
+        cout << (ans ? "YES" : "NO") << endl;
     }
 }
 

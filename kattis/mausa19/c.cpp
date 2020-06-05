@@ -1,3 +1,4 @@
+//18:49
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -31,20 +32,38 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define debug(...) printf(__VA_ARGS__)
-//#define debug(...)
+#define endl ('\n')  // avoid flushing
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v){
+    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+
+void no(){ cout << 0 << endl; }
 
 void Solve()
 {
-    int t; re(t);
-    while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+    int n;
+    cin >> n;
+    vector<string> g(n);
+    FOR(i, 0, n) cin >> g[i];
+    FOR(i, 0, n) {
+        int k = 0;
+        FOR(j, 0, n) if (g[i][j]=='W') k++; else k--;
+        if (k!=0) return no();
+        FOR(j, 0, n-2) if (
+                g[i][j]=='W'&&g[i][j+1]=='W'&&g[i][j+2]=='W' ||
+                g[i][j]=='B'&&g[i][j+1]=='B'&&g[i][j+2]=='B') return no();
     }
+    FOR(i, 0, n) {
+        int k = 0;
+        FOR(j, 0, n) if (g[j][i]=='W') k++; else k--;
+        if (k!=0) return no();
+        FOR(j, 0, n-2) if (
+                g[j][i]=='W'&&g[j+1][i]=='W'&&g[j+2][i]=='W' ||
+                g[j][i]=='B'&&g[j+1][i]=='B'&&g[j+2][i]=='B') return no();
+    }
+    cout << 1 << endl;
 }
 
 int main() {

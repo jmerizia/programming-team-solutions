@@ -31,19 +31,37 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define debug(...) printf(__VA_ARGS__)
-//#define debug(...)
+#define endl ('\n')  // avoid flushing
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& v){
+    cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
+
+const int MAXN = 2e5+99;
+int n, k, m[MAXN], c[MAXN];
+vector<vi> v;
+int tim = 0;
 
 void Solve()
 {
-    int t; re(t);
-    while (t--) {
-        int n, x; re(n); re(x); vi a(n), b(201, 0); re(a, n);
-        FOR(i, 0, n) b[a[i]] = 1;
-        FOR(i, 1, 200) if (b[i] == 0 && x > 0) b[i] = 1, x--;
-        int ans = x;
-        FOR(i, 1, 200) if (b[i] == 0) break; else ans++;
-        cout << ans << endl;
+    cin >> n >> k;
+    FOR(i, 0, n) cin >> m[i];
+    FOR(i, 0, k) cin >> c[i];
+    sort(m, m+n, greater<int>());
+    v.resize(n);
+    FOR(i, 0, n) {
+        lower_bound(all(v), c[m[i]-1], [](vi& vec, int val){ return sz(vec) >= val; })->pb(m[i]);
+        //cout << m[i] << ' ' << j << endl;
+    }
+    //cout << tim << endl;
+    int ans = 0;
+    FOR(i, 0, n) if (sz(v[i])>0) ans++; else break;
+    cout << ans << endl;
+    FOR(i, 0, ans) {
+        cout << sz(v[i]) << ' ';
+        trav(e, v[i]) cout << e << ' ';
+        cout << endl;
     }
 }
 

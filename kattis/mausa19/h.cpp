@@ -1,3 +1,4 @@
+//2:09:30
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -38,9 +39,39 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
+const int MAX = 1099;
+int R, C;
+vector<string> g(MAX);
+
+int fill(int x, int y)
+{
+    if (g[x][y]!='.') return 0;
+    g[x][y]='x';
+    if (y<C-1&&g[x][y+1]=='.') fill(x, y+1);
+    if (x<R-1&&g[x+1][y]=='.') fill(x+1, y);
+    if (y>0  &&g[x][y-1]=='.') fill(x, y-1);
+    if (x>0  &&g[x-1][y]=='.') fill(x-1, y);
+    if (x>0&&y>0    &&g[x-1][y-1]=='.'&&g[x-1][y]=='\\'&&g[x][y-1]=='\\') fill(x-1, y-1);
+    if (x<R-1&&y<C-1&&g[x+1][y+1]=='.'&&g[x+1][y]=='\\'&&g[x][y+1]=='\\') fill(x+1, y+1);
+    if (x>0&&y<C-1&&g[x-1][y+1]=='.'&&g[x-1][y]=='/'&&g[x][y+1]=='/') fill(x-1, y+1);
+    if (x<R-1&&y>0&&g[x+1][y-1]=='.'&&g[x+1][y]=='/'&&g[x][y-1]=='/') fill(x+1, y-1);
+    return 1;
+}
+
 void Solve()
 {
-
+    re(R); re(C);
+    FOR(i, 0, R) cin >> g[i];
+    int ans = 0;
+    FOR(i, 0, R-1) FOR(j, 0, C-1) {
+        if (g[i][j]=='/'&&g[i][j+1]=='\\'&&
+            g[i+1][j]=='\\'&&g[i+1][j+1]=='/') ans++;
+    }
+    // remove exterior dots:
+    FOR(i, 0, R) fill(i, 0), fill(i, C-1);
+    FOR(i, 0, C) fill(0, i), fill(R-1, i);
+    FOR(i, 0, R) FOR(j, 0, C) ans += fill(i, j);
+    cout << ans << endl;
 }
 
 int main() {
