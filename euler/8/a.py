@@ -24,7 +24,7 @@ s = \
 
 k = 13
 ans = -1
-l = 0
+l = []
 for i in range(len(s) - k):
     numbers = [int(x) for x in s[i:i + 13]]
     prod = ft.reduce(lambda x, y: x * y, numbers)
@@ -32,4 +32,4 @@ for i in range(len(s) - k):
         ans = max(ans, prod)
         l = numbers
 
-print(ans, l)
+print(ans)
