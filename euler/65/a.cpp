@@ -38,26 +38,68 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-int fac[20];
+class frac { public:
+    ll a;
+    ll b;
+    frac(ll num, ll den) {
+        a = num;
+        b = den;
+        reduce();
+    }
+    void reduce() {
+        ll g = gcd(a, b);
+        a /= g;
+        b /= g;
+    }
+    void add(frac o) {
+        int _a = a*o.b+o.a*b;
+        int _b = o.b*b;
+        a = _a;
+        b = _b;
+        reduce();
+    }
+    void flip() {
+        swap(a, b);
+    }
+    string str() {
+        return to_string(a) + "/" + to_string(b);
+    }
+};
+
+frac cf(vi &v) {
+    frac n (0, 1);
+    while (sz(v)) {
+        int x = v.bk;
+        n.add(frac(x, 1));
+        if (sz(v) > 1) n.flip();
+        //cout << n.str() << endl;
+        v.pop_back();
+    }
+    return n;
+}
+
+frac ith(int i) {
+    vi seq = {2};
+    int k = 2;
+    int idx = 0;
+    while (sz(seq) < i) {
+        if (idx % 3 == 1) {
+            seq.pb(k);
+            k += 2;
+        } else {
+            seq.pb(1);
+        }
+        idx++;
+    }
+    return cf(seq);
+}
 
 void Solve()
 {
-    fac[0] = 1;
-    FOR(i, 1, 11) fac[i] = i*fac[i-1];
-    int N = 1e7;
-    int ans = 0;
-    FOR(n, 10, N) {
-        int x = n;
-        int c = 0;
-        while (x) {
-            c += fac[x%10];
-            x /= 10;
-        }
-        if (c == n) {
-            ans += n;
-        }
+    FOR(i, 1, 30) {
+        cout << ith(i).str() << endl;
     }
-    cout << ans << endl;
+    cout << "Bah.. I need bigger numbers..." << endl;
 }
 
 int main() {

@@ -38,24 +38,56 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-int fac[20];
+bool is_prime[(int)1e7+1];
+vector<int> primes;
+int spf[(int)1e7+1];
+int pidx[(int)1e7+1];
+void run_sieve(int n)
+{
+    memset(is_prime, true, sizeof(is_prime));
+    for (int i = 1; i < n+1; i++)
+        spf[i] = i;
+    for (int p = 2; p*p <= n; p++)
+        if (is_prime[p])
+            for (int i = p*p; i <= n; i += p)
+                is_prime[i] = false, spf[i]=p;
+    for (int p = 2; p <= n; p++)
+        if (is_prime[p])
+            primes.push_back(p);
+    for (int i = 0; i < primes.size(); i++)
+        pidx[primes[i]] = i;
+}
+
+int dig(int x) {
+    int c = 0;
+    while (x) x/=10, c++;
+    return c;
+}
+
+int rot(int x) {
+    int d = x%10;
+    x/=10;
+    x += (int)d*pow(10, dig(x));
+    return x;
+}
 
 void Solve()
 {
-    fac[0] = 1;
-    FOR(i, 1, 11) fac[i] = i*fac[i-1];
-    int N = 1e7;
+    int N = 1e6;
+    run_sieve(N*10);
     int ans = 0;
-    FOR(n, 10, N) {
-        int x = n;
-        int c = 0;
-        while (x) {
-            c += fac[x%10];
-            x /= 10;
+    for (int p : primes) {
+        if (p > N) break;
+        bool ok = true;
+        int r = rot(p);
+        while (r != p) {
+            if (!is_prime[r]) {
+                ok = false;
+                break;
+            }
+            r = rot(r);
         }
-        if (c == n) {
-            ans += n;
-        }
+        if (ok) ans++;
     }
     cout << ans << endl;
 }

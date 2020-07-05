@@ -31,31 +31,65 @@ void re(int& e){cin>>e;}
 void re(ll& e){cin>>e;}
 void re(int* v, int n){FOR(i,0,n)cin>>v[i];}
 void re(vi& v, int n){FOR(i,0,n)cin>>v[i];}
-#define endl ('\n')  // avoid flushing
+//#define endl ('\n')  // avoid flushing
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v){
     cout<<"[";FOR(i,0,sz(v))cout<<v[i]<<(i==sz(v)-1?"":", ");cout<<"]";}
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-int fac[20];
+vector<string> grid;
+//int cnt;
+
+bool is_safe(int x, int y, char k) {
+    int ox = x-x%3, oy = y-y%3;
+    FOR(i, 0, 9) if (grid[i][y] == k) return false;
+    FOR(j, 0, 9) if (grid[x][j] == k) return false;
+    FOR(i, 0, 3) FOR(j, 0, 3) if (grid[i+ox][j+oy] == k) return false;
+    return true;
+}
+
+bool bt(int zeros) {
+    //cnt++;
+    //if (cnt % 100000 == 0) {
+    //    cout << cnt << endl;
+    //}
+
+    if (zeros == 0) return true;
+    int x, y;
+    FOR(i, 0, 9) FOR(j, 0, 9) if (grid[i][j] == '0') x = i, y = j;
+    trav(k, string("123456789")) {
+        if (is_safe(x, y, k)) {
+            grid[x][y] = k;
+            if (bt(zeros-1)) return true;
+            grid[x][y] = '0';
+        }
+    }
+
+    return false;
+}
 
 void Solve()
 {
-    fac[0] = 1;
-    FOR(i, 1, 11) fac[i] = i*fac[i-1];
-    int N = 1e7;
-    int ans = 0;
-    FOR(n, 10, N) {
-        int x = n;
-        int c = 0;
-        while (x) {
-            c += fac[x%10];
-            x /= 10;
+    ifstream f;
+    f.open("p096_sudoku.txt");
+    string tmp;
+    int ans;
+    FOR(t, 0, 50) {
+        getline(f, tmp);
+        grid.resize(9);
+        FOR(i, 0, 9) {
+            getline(f, grid[i]);
         }
-        if (c == n) {
-            ans += n;
+
+        int zeros = 0;
+        FOR(i, 0, 9) FOR(j, 0, 9) if (grid[i][j] == '0') zeros++;
+        if (!bt(zeros)) {
+            cout << "urg, no solution found for test " << t << endl;
+            exit(1);
         }
+        int num = atoi(grid[0].substr(0, 3).c_str());
+        ans += num;
     }
     cout << ans << endl;
 }

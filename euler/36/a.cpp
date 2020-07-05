@@ -38,25 +38,34 @@ ostream& operator<<(ostream& os, const vector<T>& v){
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const pair<T, U>& v){ cout<<"{"<<v.fi<<", "<<v.se<<"}";}
 
-int fac[20];
+int dig(int x, int b) {
+    int c = 0;
+    while (x) x/=b, c++;
+    return c;
+}
+
+int rev(int x, int b) {
+    int k = 0;
+    int num = dig(x, b)-1;
+    int d;
+    while (x) {
+        d = x % b;
+        k += d*(int)pow(b, num);
+        x /= b;
+        num--;
+    }
+    return k;
+}
+
+bool pal(int x, int b) {
+    return x == rev(x, b);
+}
 
 void Solve()
 {
-    fac[0] = 1;
-    FOR(i, 1, 11) fac[i] = i*fac[i-1];
-    int N = 1e7;
+    int N = 1e6;
     int ans = 0;
-    FOR(n, 10, N) {
-        int x = n;
-        int c = 0;
-        while (x) {
-            c += fac[x%10];
-            x /= 10;
-        }
-        if (c == n) {
-            ans += n;
-        }
-    }
+    FOR(n, 0, N) if (pal(n, 10) && pal(n, 2)) ans += n;
     cout << ans << endl;
 }
 
